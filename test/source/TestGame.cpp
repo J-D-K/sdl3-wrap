@@ -6,7 +6,7 @@
 
 namespace
 {
-    constexpr std::string_view WINDOW_TITLE = "My AI Boyfriend SDL3 Test";
+    constexpr std::string_view WINDOW_TITLE = "SDL3 Wrapper Test";
     constexpr int WINDOW_WIDTH              = 1920;
     constexpr int WINDOW_HEIGHT             = 1080;
 }
