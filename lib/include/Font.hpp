@@ -49,8 +49,23 @@ namespace sdl3
             /// @param target Target to render to.
             /// @param x X coordinate to render to.
             /// @param y Y coordinate to render to.
+            /// @param renderColor Color to render mod and render the text with.
             /// @param text Text to render.
-            void render_text_to(sdl3::SharedTexture &target, int x, int y, std::string_view text);
+            void render_text_to(int x, int y, SDL_Color renderColor, std::string_view text);
+
+            /// @brief Renders the text wrapped to the target using the arguments passed.
+            /// @param target Target to render text to.
+            /// @param x X coordinate to render text to.
+            /// @param y Y coordinate to render text to.
+            /// @param maxWidth Maximum width of the text before a new line is started.
+            /// @param renderColor Color to render text with.
+            /// @param text Text to render.
+            void render_text_to_wrapped(int x, int y, int maxWidth, SDL_Color renderColor, std::string_view text);
+
+            /// @brief Returns the width of the string in pixels.
+            /// @param text Text to get the width of.
+            /// @return Width of the text in pixels.
+            size_t get_text_width(std::string_view text);
 
         private:
             /// @brief Stores whether or not loading the font was successful.

@@ -7,6 +7,9 @@
 
 namespace sdl3
 {
+    // Forward to prevent headaches.
+    class SDL3;
+
     /// @brief Forward to allow the following.
     class Texture;
 
@@ -39,12 +42,17 @@ namespace sdl3
             /// @brief Frees the texture once it's finished.
             ~Texture();
 
+            /// @brief Sets the render color mod for the texture.
+            /// @param colorMod Color to mod the render color for.
+            /// @return True on success. False on failure.
+            bool set_color_mod(SDL_Color colorMod);
+
             /// @brief Renders the texture to the target passed at the coordinates passed.
             /// @param target Target to render to.
             /// @param x X coordinate.
             /// @param y Y coordinate.
             /// @return True on success. False on failure.
-            bool render_to(SharedTexture &target, int x, int y);
+            bool render(int x, int y);
 
             /// @brief Renders the texture to the target passed stretched to width and height.
             /// @param target Target to render to.
@@ -53,7 +61,7 @@ namespace sdl3
             /// @param width Width to render at.
             /// @param height Height to render at.
             /// @return True on success. False on failure.
-            bool render_to_stretched(SharedTexture &target, int x, int y, int width, int height);
+            bool render_stretched(int x, int y, int width, int height);
 
             /// @brief Renders a part of the texture to the coordinates passed.
             /// @param target Target to render to.
@@ -64,13 +72,7 @@ namespace sdl3
             /// @param sourceWidth Width of the part to render.
             /// @param sourceHeight Height of the part to render.
             /// @return True on success. False on failure.
-            bool render_part_to(SharedTexture &target,
-                                int x,
-                                int y,
-                                int sourceX,
-                                int sourceY,
-                                int sourceWidth,
-                                int sourceHeight);
+            bool render_to(int x, int y, int sourceX, int sourceY, int sourceWidth, int sourceHeight);
 
             /// @brief Renders a part of the texture stretched to the target passed.
             /// @param target Target to render to.
@@ -83,15 +85,17 @@ namespace sdl3
             /// @param sourceWidth Width of the source to render to.
             /// @param sourceHeight Height of the source to render to.
             /// @return True on success. False on failure.
-            bool render_part_to_stretched(SharedTexture &target,
-                                          int x,
-                                          int y,
-                                          int width,
-                                          int height,
-                                          int sourceX,
-                                          int sourceY,
-                                          int sourceWidth,
-                                          int sourceHeight);
+            bool render_part_stretched(int x,
+                                       int y,
+                                       int width,
+                                       int height,
+                                       int sourceX,
+                                       int sourceY,
+                                       int sourceWidth,
+                                       int sourceHeight);
+
+            /// @brief This is used so the main class can set the render target.
+            friend class sdl3::SDL3;
 
         private:
             /// @brief Pointer to the underlying SDL_Texture.

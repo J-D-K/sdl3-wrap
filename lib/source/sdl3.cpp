@@ -79,6 +79,14 @@ void sdl3::SDL3::update()
     input.update();
 }
 
+bool sdl3::SDL3::set_render_target(sdl3::SharedTexture &target)
+{
+    // Instance.
+    SDL3 &instance = SDL3::get_instance();
+
+    return SDL_SetRenderTarget(instance.m_renderer, target->m_texture);
+}
+
 void sdl3::SDL3::frame_begin()
 {
     // Instance.
@@ -115,16 +123,16 @@ void sdl3::SDL3::frame_end()
     SDL_Delay(static_cast<uint32_t>(fpsCap - frameDelta));
 }
 
-sdl3::Input &sdl3::SDL3::get_input() noexcept
-{
-    SDL3 &instance = SDL3::get_instance();
-    return instance.m_input;
-}
-
 SDL_Renderer *sdl3::SDL3::get_renderer() noexcept
 {
     SDL3 &instance = SDL3::get_instance();
     return instance.m_renderer;
+}
+
+sdl3::Input &sdl3::SDL3::get_input() noexcept
+{
+    SDL3 &instance = SDL3::get_instance();
+    return instance.m_input;
 }
 
 void sdl3::SDL3::set_fps_cap(double fps) noexcept

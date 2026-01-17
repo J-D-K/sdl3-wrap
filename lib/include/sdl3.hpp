@@ -1,7 +1,9 @@
 #pragma once
 
+#include "Font.hpp"
 #include "Input.hpp"
 #include "ResourceManager.hpp"
+#include "Texture.hpp"
 
 #include <SDL3/SDL.h>
 #include <string_view>
@@ -30,17 +32,21 @@ namespace sdl3
             /// @brief Runs the update routine.
             static void update();
 
+            /// @brief Sets the render target to the texture passed. Pass sdl3::Text::NullTexture for the framebuffer.
+            /// @param target Render target to render to.
+            static bool set_render_target(sdl3::SharedTexture &target);
+
             /// @brief Starts the frame.
             static void frame_begin();
 
             /// @brief Ends the frame and presents the renderer to screen.
             static void frame_end();
 
+            /// @brief Returns the internal renderer.
+            static SDL_Renderer *get_renderer() noexcept;
+
             /// @brief Returns a reference to the input instance.
             static sdl3::Input &get_input() noexcept;
-
-            /// @brief Returns the pointer to the renderer.
-            static SDL_Renderer *get_renderer() noexcept;
 
             /// @brief Sets the frames per second cap.
             /// @param fps Number of target frames per second.

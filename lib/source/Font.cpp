@@ -51,7 +51,7 @@ sdl3::Font::~Font()
 
 //                      ---- Public Functions ----
 
-void sdl3::Font::render_text_to(sdl3::SharedTexture &target, int x, int y, std::string_view text)
+void sdl3::Font::render_text_to(int x, int y, SDL_Color renderColor, std::string_view text)
 {
     // Store this because we might need it.
     const int originalX = x;
@@ -72,16 +72,107 @@ void sdl3::Font::render_text_to(sdl3::SharedTexture &target, int x, int y, std::
         if (!getGlyph.has_value()) { continue; } // If the optional is empty, just continue the loop.
 
         // Data reference to make things easier to type and read.
-        const auto glyphData = getGlyph->get();
+        const Font::GlyphData &glyphData = getGlyph->get();
+
+        // Set the color mod.
+        glyphData.texture->set_color_mod(renderColor);
 
         // Render the glyph.
         const int renderX = x + glyphData.left;
         const int renderY = y + (m_pixelSize - glyphData.top);
-        glyphData.texture->render_to(target, renderX, renderY);
+        glyphData.texture->render(renderX, renderY);
 
         // Advance our rendering position.
         x += glyphData.advanceX;
     }
+}
+
+void sdl3::Font::render_text_to_wrapped(int x, int y, int maxWidth, SDL_Color renderColor, std::string_view text)
+{
+    // Save this just in case.
+    const int originalX = x;
+
+    // This is our adjusted maxWidth.
+    const int adjustedMax = x + maxWidth;
+
+    // This is our current width.
+    size_t currentWidth{};
+
+    // This is different than the above because we need to track the length differently.
+    const size_t textLength = text.length();
+
+    // This is so I don't have to repeat this.
+    auto break_line = [&]()
+    {
+        x = originalX;
+        y += m_pixelSize + (m_pixelSize / 4);
+    };
+
+    // Loop through text.
+    for (size_t i = 0; i < textLength;)
+    {
+        // Find the next valid breakpoint and create a substring. Even if this is npos, it will work.
+        size_t nextBreakpoint = text.find_first_of(" .", i);
+        if (nextBreakpoint != text.npos) { ++nextBreakpoint; }
+        std::string_view word{text.substr(i, nextBreakpoint - i)};
+
+        // Get the length of the word. If we've surpassed our max, break the line.
+        const size_t wordWidth = Font::get_text_width(word);
+        if (x + wordWidth >= adjustedMax) { break_line(); }
+
+        // Loop through the word and render it.
+        for (const char charCode : word)
+        {
+            // Line breaking.
+            if (charCode == '\n')
+            {
+                break_line();
+                continue;
+            }
+
+            // Try to load/find the glyph. If it's not found, just continue.
+            const auto getGlyph = Font::find_load_glyph(charCode);
+            if (!getGlyph.has_value()) { continue; }
+
+            // Get the actual data.
+            const Font::GlyphData &glyphData = getGlyph->get();
+
+            // Render color.
+            glyphData.texture->set_color_mod(renderColor);
+
+            // Render the glyph.
+            const int renderX = x + glyphData.left;
+            const int renderY = y + (m_pixelSize - glyphData.top);
+            glyphData.texture->render(renderX, renderY);
+
+            // Advance position.
+            x += glyphData.advanceX;
+        }
+
+        i += word.length();
+    }
+}
+
+size_t sdl3::Font::get_text_width(std::string_view text)
+{
+    size_t textWidth{};
+    for (const char charCode : text)
+    {
+        // Ignore line breaks.
+        if (charCode == '\n') { continue; }
+
+        // Attempt to get glyph.
+        const auto getGlyph = Font::find_load_glyph(charCode);
+        if (!getGlyph.has_value()) { continue; }
+
+        // Actual glyph data.
+        const Font::GlyphData &glyphData = getGlyph->get();
+
+        // Add the advance to the text width.
+        textWidth += glyphData.advanceX;
+    }
+
+    return textWidth;
 }
 
 //                      ---- Private Functions ----

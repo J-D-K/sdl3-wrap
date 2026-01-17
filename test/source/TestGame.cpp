@@ -22,7 +22,7 @@ TestGame::TestGame()
     if (!sdl3::SDL3::initialize(WINDOW_TITLE, WINDOW_WIDTH, WINDOW_HEIGHT)) { return; }
 
     m_testTexture = sdl3::TextureManager::load_resource(TEXTURE_PATH, TEXTURE_PATH);
-    m_testFont    = sdl3::FontManager::load_resource(FONT_PATH, FONT_PATH, 14);
+    m_testFont    = sdl3::FontManager::load_resource(FONT_PATH, FONT_PATH, 24);
 
     m_isRunning = true;
 }
@@ -48,8 +48,15 @@ void TestGame::update() noexcept
 
 void TestGame::render() noexcept
 {
+    // Color for rendering text.
+    constexpr SDL_Color TEXT_RENDER_COLOR = {.r = 0xFF, .g = 0x00, .b = 0x00, .a = 0xFF};
+
     sdl3::SDL3::frame_begin();
-    m_testTexture->render_to(sdl3::Texture::NullTexture, 0, 0);
-    m_testFont->render_text_to(sdl3::Texture::NullTexture, 320, 240, "Test text rendering.\nLine breaking too.\nThe End.");
+    m_testTexture->render(0, 0);
+    m_testFont->render_text_to_wrapped(320,
+                                       240,
+                                       320,
+                                       TEXT_RENDER_COLOR,
+                                       "Test text rendering. Line wrapping too. The End. Press Escape to exit.");
     sdl3::SDL3::frame_end();
 }
