@@ -1,0 +1,148 @@
+#include "Font.hpp"
+
+#include "Freetype.hpp"
+#include "ResourceManager.hpp"
+#include "Surface.hpp"
+
+#include <filesystem>
+#include <format>
+#include <fstream>
+#include <span>
+
+//                      ---- Construction ----
+
+sdl3::Font::Font(std::string_view fontPath, int pixelSize)
+    : m_pixelSize{pixelSize}
+{
+    // Attempt to get the file size of the font.
+    const size_t fontSize = std::filesystem::file_size(fontPath);
+    if (fontSize == 0) { return; }
+
+    // Buffer for the font.
+    m_fontBuffer = std::make_unique<char[]>(fontSize);
+    if (!m_fontBuffer) { return; }
+
+    // Open the font for reading.
+    std::ifstream fontFile{fontPath.data(), std::ios::binary};
+    if (!fontFile.is_open()) { return; }
+
+    // Read it to buffer.
+    fontFile.read(m_fontBuffer.get(), fontSize);
+    if (fontFile.gcount() != fontSize) { return; }
+
+    // Create the font face.
+    FT_Error ftError =
+        FT_New_Memory_Face(Freetype::get_library(), reinterpret_cast<FT_Byte *>(m_fontBuffer.get()), fontSize, 0, &m_fontFace);
+    if (ftError != 0) { return; }
+
+    // Set the size.
+    ftError = FT_Set_Pixel_Sizes(m_fontFace, 0, m_pixelSize);
+    if (ftError != 0) { return; }
+
+    m_isValid = true;
+}
+
+sdl3::Font::~Font()
+{
+    if (!m_fontFace) { return; }
+
+    FT_Done_Face(m_fontFace);
+}
+
+//                      ---- Public Functions ----
+
+void sdl3::Font::render_text_to(sdl3::SharedTexture &target, int x, int y, std::string_view text)
+{
+    // Store this because we might need it.
+    const int originalX = x;
+
+    // Loop through the text and render it.
+    for (const char charCode : text)
+    {
+        // Handle newlines here instead of processing them after the glyph is loaded.
+        if (charCode == '\n')
+        {
+            x = originalX;
+            y += m_pixelSize + (m_pixelSize / 4);
+            continue;
+        }
+
+        // Try to load the glyph first.
+        const auto getGlyph = Font::find_load_glyph(charCode);
+        if (!getGlyph.has_value()) { continue; } // If the optional is empty, just continue the loop.
+
+        // Data reference to make things easier to type and read.
+        const auto glyphData = getGlyph->get();
+
+        // Render the glyph.
+        const int renderX = x + glyphData.left;
+        const int renderY = y + (m_pixelSize - glyphData.top);
+        glyphData.texture->render_to(target, renderX, renderY);
+
+        // Advance our rendering position.
+        x += glyphData.advanceX;
+    }
+}
+
+//                      ---- Private Functions ----
+
+sdl3::OptionalReference<sdl3::Font::GlyphData> sdl3::Font::find_load_glyph(char charCode)
+{
+    // Start by searching the map for the character.
+    const auto findCharacter = m_cacheMap.find(charCode);
+    if (findCharacter != m_cacheMap.end()) { return findCharacter->second; }
+
+    // Check if the character exists in the font.
+    const FT_UInt charIndex  = FT_Get_Char_Index(m_fontFace, charCode);
+    const FT_Error loadError = FT_Load_Glyph(m_fontFace, charIndex, FT_LOAD_RENDER);
+    if (loadError != 0) { return std::nullopt; }
+
+    // This makes things easier to read.
+    const FT_GlyphSlot glyphSlot = m_fontFace->glyph;
+    const FT_Bitmap glyphBitmap  = glyphSlot->bitmap;
+
+    // Convert to texture.
+    sdl3::SharedTexture glyphTexture = Font::convert_glyph_to_texture(charCode, glyphBitmap);
+
+    // Add to cache map.
+    // Struct
+    Font::GlyphData cacheData = {.advanceX = static_cast<int16_t>(glyphSlot->advance.x >> 6),
+                                 .top      = static_cast<int16_t>(glyphSlot->bitmap_top),
+                                 .left     = static_cast<int16_t>(glyphSlot->bitmap_left),
+                                 .texture  = glyphTexture};
+
+    // Try emplace.
+    const auto emplacePair = m_cacheMap.try_emplace(charCode, cacheData);
+    if (!emplacePair.second) { return std::nullopt; }
+
+    // Return the one in the cache map since the other was temporary and will die once this function finishes.
+    return m_cacheMap.at(charCode);
+}
+
+sdl3::SharedTexture sdl3::Font::convert_glyph_to_texture(char charCode, const FT_Bitmap glyphBitmap)
+{
+    // The base pixel color is white. That makes it easier to color later.
+    static constexpr uint32_t BASE_PIXEL_COLOR = 0xFFFFFF00;
+
+    // Bitmap size. I've always found Freetype's rows instead of height confusing.
+    const size_t bitmapSize = glyphBitmap.width * glyphBitmap.rows;
+
+    // Temporary surface.
+    sdl3::Surface surface = sdl3::create_new_surface_rgba(glyphBitmap.width, glyphBitmap.rows);
+
+    // Cast pointer to raw surface data.
+    uint32_t *rawSurface = reinterpret_cast<uint32_t *>(surface.get()->pixels);
+
+    // Spans for blitting. These should both be the same size.
+    std::span<uint32_t> surfacePixels{rawSurface, bitmapSize};
+    std::span<const uint8_t> bitmapPixels{glyphBitmap.buffer, bitmapSize};
+
+    // Loop and blit.
+    for (size_t i = 0; i < bitmapSize; i++) { surfacePixels[i] = BASE_PIXEL_COLOR | bitmapPixels[i]; }
+
+    // Name for the texture manager to keep track.
+    const std::string glyphName = std::format("{}-{}", charCode, m_pixelSize);
+
+    // Return the texture. We're going to use a name here instead of a path.
+    return sdl3::TextureManager::load_resource(glyphName, surface);
+}

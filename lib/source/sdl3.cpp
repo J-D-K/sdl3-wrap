@@ -1,5 +1,7 @@
 #include "sdl3.hpp"
 
+#include "Freetype.hpp"
+
 #include <cmath>
 
 namespace
@@ -52,6 +54,9 @@ bool sdl3::SDL3::initialize(std::string_view windowTitle, int windowWidth, int w
     // Init renderer.
     *renderer = SDL_CreateRenderer(*window, nullptr);
     if (!*renderer) { return false; }
+
+    // Freetype.
+    if (!sdl3::Freetype::initialize()) { return false; }
 
     return true;
 }

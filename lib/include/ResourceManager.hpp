@@ -1,5 +1,6 @@
 #pragma once
 
+#include "Font.hpp"
 #include "Texture.hpp"
 
 #include <map>
@@ -22,7 +23,7 @@ namespace sdl3
             ResourceManager &operator=(ResourceManager &&)      = delete;
 
             template <typename... Args>
-            static std::shared_ptr<ResourceType> load_resource(std::string_view resourcePath, Args &&...args)
+            static std::shared_ptr<ResourceType> load_resource(std::string_view resourceName, Args &&...args)
             {
                 // Grab instance and map.
                 ResourceManager &manager = ResourceManager::get_instance();
@@ -32,7 +33,7 @@ namespace sdl3
                 // manager.purge_expired();
 
                 // Search to see if the resource has been loaded previously.
-                auto findResource = resourceMap.find(resourcePath);
+                auto findResource = resourceMap.find(resourceName);
 
                 // If the resource was found and it wasn't expired, return it.
                 if (findResource != resourceMap.end() && !findResource->second.expired())
@@ -42,10 +43,10 @@ namespace sdl3
                 else
                 {
                     // Create and load the resource.
-                    auto resource = std::make_shared<ResourceType>(resourcePath, std::forward<Args>(args)...);
+                    auto resource = std::make_shared<ResourceType>(std::forward<Args>(args)...);
 
                     // Map.
-                    resourceMap.try_emplace(std::string{resourcePath}, resource);
+                    resourceMap.try_emplace(std::string{resourceName}, resource);
 
                     return resource;
                 }
@@ -106,4 +107,7 @@ namespace sdl3
 
     /// @brief Definition for the TextureManager.
     using TextureManager = sdl3::ResourceManager<sdl3::Texture>;
+
+    /// @brief Definition for the FontManager.
+    using FontManager = sdl3::ResourceManager<sdl3::Font>;
 }

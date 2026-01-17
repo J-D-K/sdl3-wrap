@@ -26,6 +26,6 @@ class TestGame final
         /// @brief Test texture for rendering.
         sdl3::SharedTexture m_testTexture{};
 
-        /// @brief Vector of game objects.
-        std::vector<Object> m_objects{};
+        /// @brief Test font.
+        sdl3::SharedFont m_testFont{};
 };
