@@ -58,6 +58,9 @@ bool sdl3::SDL3::initialize(std::string_view windowTitle, int windowWidth, int w
     // Freetype.
     if (!sdl3::Freetype::initialize()) { return false; }
 
+    // Frame time.
+    SDL3::set_fps_cap(60);
+
     return true;
 }
 
@@ -67,7 +70,7 @@ void sdl3::SDL3::update()
     SDL3 &instance = SDL3::get_instance();
 
     // Record the ticks.
-    instance.m_beginTicks = static_cast<double>(SDL_GetTicks());
+    instance.m_frameBeginTime = SDL_GetTicksNS();
 
     // Input.
     sdl3::Input &input = instance.m_input;
@@ -77,6 +80,14 @@ void sdl3::SDL3::update()
 
     // Update input.
     input.update();
+}
+
+bool sdl3::SDL3::set_render_logical_presentation(int width, int height)
+{
+    // Instance.
+    SDL3 &instance = SDL3::get_instance();
+
+    return SDL_SetRenderLogicalPresentation(instance.m_renderer, width, height, SDL_LOGICAL_PRESENTATION_STRETCH);
 }
 
 bool sdl3::SDL3::set_render_target(sdl3::SharedTexture &target)
@@ -114,13 +125,14 @@ void sdl3::SDL3::frame_end()
     if (!SDL_RenderPresent(renderer)) { return; }
 
     // Delay for FPS cap.
-    const double fpsCap     = instance.m_fpsCap;
-    const double beginTicks = instance.m_beginTicks;
-    const double endTicks   = static_cast<double>(SDL_GetTicks());
-    const double frameDelta = std::floor(endTicks - beginTicks);
+    const uint64_t fpsCap     = instance.m_fpsCapTime;
+    const uint64_t beginTicks = instance.m_frameBeginTime;
+    const uint64_t endTicks   = SDL_GetTicksNS();
+    const uint64_t frameDelta = endTicks - beginTicks;
     if (frameDelta >= fpsCap) { return; }
 
-    SDL_Delay(static_cast<uint32_t>(fpsCap - frameDelta));
+    const uint32_t sdlDelayTime = fpsCap - frameDelta;
+    SDL_DelayPrecise(sdlDelayTime);
 }
 
 SDL_Renderer *sdl3::SDL3::get_renderer() noexcept
@@ -135,10 +147,12 @@ sdl3::Input &sdl3::SDL3::get_input() noexcept
     return instance.m_input;
 }
 
-void sdl3::SDL3::set_fps_cap(double fps) noexcept
+void sdl3::SDL3::set_fps_cap(uint64_t fps) noexcept
 {
-    SDL3 &instance    = SDL3::get_instance();
-    instance.m_fpsCap = 1000.0f / fps;
+    constexpr uint64_t NANOSECONDS_IN_SECOND = 1e+9;
+
+    SDL3 &instance        = SDL3::get_instance();
+    instance.m_fpsCapTime = NANOSECONDS_IN_SECOND / fps;
 }
 
 //                      ---- Private functions ----

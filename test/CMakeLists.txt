@@ -9,8 +9,12 @@ find_package(SDL3 REQUIRED CONFIG REQUIRED COMPONENTS SDL3-shared)
 find_package(Freetype REQUIRED)
 
 set(SOURCE_FILES
+    source/Bullet.cpp
+    source/Enemy.cpp
+    source/Game.cpp
     source/main.cpp
-    source/TestGame.cpp)
+    source/Player.cpp
+    source/Star.cpp)
 
 add_executable(${PROJECT_NAME})
 

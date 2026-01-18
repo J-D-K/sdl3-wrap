@@ -51,7 +51,7 @@ sdl3::Font::~Font()
 
 //                      ---- Public Functions ----
 
-void sdl3::Font::render_text_to(int x, int y, SDL_Color renderColor, std::string_view text)
+void sdl3::Font::render_text(int x, int y, SDL_Color renderColor, std::string_view text)
 {
     // Store this because we might need it.
     const int originalX = x;
@@ -87,7 +87,7 @@ void sdl3::Font::render_text_to(int x, int y, SDL_Color renderColor, std::string
     }
 }
 
-void sdl3::Font::render_text_to_wrapped(int x, int y, int maxWidth, SDL_Color renderColor, std::string_view text)
+void sdl3::Font::render_text_wrapped(int x, int y, int maxWidth, SDL_Color renderColor, std::string_view text)
 {
     // Save this just in case.
     const int originalX = x;

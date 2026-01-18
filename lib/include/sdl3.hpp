@@ -32,6 +32,12 @@ namespace sdl3
             /// @brief Runs the update routine.
             static void update();
 
+            /// @brief Sets the logical presentation of the renderer.
+            /// @param width Width of the render area.
+            /// @param height Height of the render area.
+            /// @return True on success. False on failure.
+            static bool set_render_logical_presentation(int width, int height);
+
             /// @brief Sets the render target to the texture passed. Pass sdl3::Text::NullTexture for the framebuffer.
             /// @param target Render target to render to.
             static bool set_render_target(sdl3::SharedTexture &target);
@@ -50,7 +56,7 @@ namespace sdl3
 
             /// @brief Sets the frames per second cap.
             /// @param fps Number of target frames per second.
-            static void set_fps_cap(double fps) noexcept;
+            static void set_fps_cap(uint64_t fps) noexcept;
 
         private:
             /// @brief SDL Window.
@@ -62,11 +68,11 @@ namespace sdl3
             /// @brief Input instance.
             sdl3::Input m_input{};
 
-            /// @brief The FPS cap. The default is 60.
-            double m_fpsCap{1000.0f / 60.0f};
+            /// @brief The amount of nanoseconds every frame should take.
+            uint64_t m_fpsCapTime{};
 
-            /// @brief The ticks when starting a frame.
-            double m_beginTicks{};
+            /// @brief The time that SDL3::update was called.
+            uint64_t m_frameBeginTime{};
 
             /// @brief Constructor is private.
             SDL3();

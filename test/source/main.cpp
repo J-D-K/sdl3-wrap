@@ -1,17 +1,18 @@
-#include "TestGame.hpp"
+#include "Game.hpp"
 #include "sdl3.hpp"
 
+#include <cstdlib>
+#include <ctime>
 #include <string_view>
 
 int main(void)
 {
-    TestGame testGame{};
+    // Start by seeding the random generator.
+    std::srand(std::time(nullptr));
 
-    while (testGame.is_running())
-    {
-        testGame.update();
-        testGame.render();
-    }
+    // Game instance.
+    Game game{};
 
-    return 0;
+    // Run the game.
+    return game.run();
 }

@@ -53,10 +53,18 @@ sdl3::Texture::~Texture()
 
 //                      ---- Public Functions ----
 
+int sdl3::Texture::get_width() const noexcept { return m_width; }
+
+int sdl3::Texture::get_height() const noexcept { return m_height; }
+
+bool sdl3::Texture::set_alpha_mod(uint8_t alpha) { return SDL_SetTextureAlphaMod(m_texture, alpha); }
+
 bool sdl3::Texture::set_color_mod(SDL_Color colorMod)
 {
     return SDL_SetTextureColorMod(m_texture, colorMod.r, colorMod.g, colorMod.b);
 }
+
+bool sdl3::Texture::set_scale_mode(SDL_ScaleMode scaleMode) { return SDL_SetTextureScaleMode(m_texture, scaleMode); }
 
 bool sdl3::Texture::render(int x, int y)
 {
@@ -80,7 +88,7 @@ bool sdl3::Texture::render_stretched(int x, int y, int width, int height)
     return SDL_RenderTexture(sm_renderer, m_texture, &sourceRect, &destRect);
 }
 
-bool sdl3::Texture::render_to(int x, int y, int sourceX, int sourceY, int sourceWidth, int sourceHeight)
+bool sdl3::Texture::render_part(int x, int y, int sourceX, int sourceY, int sourceWidth, int sourceHeight)
 {
     // Rects.
     const SDL_FRect sourceRect = {.x = static_cast<float>(sourceX),

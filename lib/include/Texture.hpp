@@ -42,10 +42,26 @@ namespace sdl3
             /// @brief Frees the texture once it's finished.
             ~Texture();
 
+            /// @brief Returns the width of the sprite.
+            int get_width() const noexcept;
+
+            /// @brief Returns the height of the sprite.
+            int get_height() const noexcept;
+
+            /// @brief Set's the alpha mod of the texture.
+            /// @param alpha Alpha to render with.
+            /// @return True on success. False on failure.
+            bool set_alpha_mod(uint8_t alpha);
+
             /// @brief Sets the render color mod for the texture.
             /// @param colorMod Color to mod the render color for.
             /// @return True on success. False on failure.
             bool set_color_mod(SDL_Color colorMod);
+
+            /// @brief Sets the scale mode for the text.
+            /// @param scaleMode Scale mode to set to.
+            /// @return True on success. False on failure.
+            bool set_scale_mode(SDL_ScaleMode scaleMode);
 
             /// @brief Renders the texture to the target passed at the coordinates passed.
             /// @param target Target to render to.
@@ -72,7 +88,7 @@ namespace sdl3
             /// @param sourceWidth Width of the part to render.
             /// @param sourceHeight Height of the part to render.
             /// @return True on success. False on failure.
-            bool render_to(int x, int y, int sourceX, int sourceY, int sourceWidth, int sourceHeight);
+            bool render_part(int x, int y, int sourceX, int sourceY, int sourceWidth, int sourceHeight);
 
             /// @brief Renders a part of the texture stretched to the target passed.
             /// @param target Target to render to.
