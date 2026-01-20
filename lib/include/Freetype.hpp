@@ -5,7 +5,7 @@
 
 namespace sdl3
 {
-    // This is a small singleton for initializing the global freetype library used to ensure it's exited correctly.
+    // Simple container class for Freetype.
     class Freetype final
     {
         public:
@@ -15,49 +15,23 @@ namespace sdl3
             Freetype &operator=(const Freetype &) = delete;
             Freetype &operator=(Freetype &&)      = delete;
 
+            /// @brief Constructor. Initializes library.
+            Freetype()
+            {
+                if (!m_library) { FT_Init_FreeType(&m_library); }
+            }
+
             /// @brief Destructor needs to be public.
             ~Freetype()
             {
-                // Get instance.
-                Freetype &instance = Freetype::get_instance();
-
-                // If it's not initialized, bail.
-                if (!instance.m_library) { return; }
-
-                FT_Done_FreeType(instance.m_library);
+                if (m_library) { FT_Done_FreeType(m_library); }
             }
 
-            static bool initialize()
-            {
-                // Instance.
-                Freetype &instance = Freetype::get_instance();
-
-                // Library
-                FT_Library *library = &instance.m_library;
-
-                // Init/return
-                return FT_Init_FreeType(library) == 0;
-            }
-
-            /// @brief Returns the Freetype library.
-            static FT_Library get_library() noexcept
-            {
-                // Instance.
-                Freetype &instance = Freetype::get_instance();
-                return instance.m_library;
-            }
+            /// @brief Returns the freetype library.
+            FT_Library get_library() const noexcept { return m_library; }
 
         private:
             /// @brief Freetype library.
             FT_Library m_library{};
-
-            /// @brief Constructor is private.
-            Freetype() = default;
-
-            static Freetype &get_instance()
-            {
-                static Freetype instance{};
-                return instance;
-            }
     };
 }

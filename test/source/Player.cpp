@@ -26,8 +26,8 @@ void Player::update(Game &game, const sdl3::Input &input)
 {
     // This is to make the conditions easier to read.
     using sdl3::Input;
-    using sdl3::Input::KeyStates::Held;
-    using sdl3::Input::KeyStates::Pressed;
+    using sdl3::Input::State::Held;
+    using sdl3::Input::State::Pressed;
 
     // Offsets for spawning the bullet.
     static constexpr int BULLET_OFFSET_X = 42;
@@ -37,11 +37,11 @@ void Player::update(Game &game, const sdl3::Input &input)
     static constexpr int STATIC_MOVEMENT = 4;
 
     // Grab keystates.
-    const Input::KeyStates upState    = input.get_key_state(SDL_SCANCODE_UP);
-    const Input::KeyStates downState  = input.get_key_state(SDL_SCANCODE_DOWN);
-    const Input::KeyStates leftState  = input.get_key_state(SDL_SCANCODE_LEFT);
-    const Input::KeyStates rightState = input.get_key_state(SDL_SCANCODE_RIGHT);
-    const Input::KeyStates spaceState = input.get_key_state(SDL_SCANCODE_SPACE);
+    const Input::State upState    = input.get_key_state(SDL_SCANCODE_UP);
+    const Input::State downState  = input.get_key_state(SDL_SCANCODE_DOWN);
+    const Input::State leftState  = input.get_key_state(SDL_SCANCODE_LEFT);
+    const Input::State rightState = input.get_key_state(SDL_SCANCODE_RIGHT);
+    const Input::State spaceState = input.get_key_state(SDL_SCANCODE_SPACE);
 
     // Conditions.
     const bool moveUp      = (upState == Pressed || upState == Held) && m_y > 0;

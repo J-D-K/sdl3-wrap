@@ -19,12 +19,11 @@ namespace
 //                      ---- Construction ----
 
 Game::Game()
+    : m_sdl3()
+    , m_input()
 {
-    static constexpr std::string_view FONT_PATH{"./assets/MainFont.ttf"};
-
-    // Init SDL.
-    if (!sdl3::SDL3::initialize(WINDOW_TITLE, WINDOW_WIDTH, WINDOW_HEIGHT)) { return; }
-    else if (!sdl3::SDL3::set_render_logical_presentation(LOGICAL_WIDTH, LOGICAL_HEIGHT)) { return; }
+    // Path of the main font used.
+    static constexpr std::string_view FONT_PATH = "./assets/MainFont.ttf";
 
     // Load the font.
     m_font = sdl3::FontManager::load_resource(FONT_PATH, FONT_PATH, 14);
@@ -39,15 +38,15 @@ int Game::run() noexcept
 {
     while (true)
     {
-        // Start by updating SDL.
-        sdl3::SDL3::update();
+        // Pump events.
+        m_sdl3.pump_events();
 
-        // Input reference.
-        sdl3::Input &input = sdl3::SDL3::get_input();
+        // Update input.
+        m_input.update();
 
         // Exit on escape.
-        const sdl3::Input::KeyStates escapeState = input.get_key_state(SDL_SCANCODE_ESCAPE);
-        const bool exit                          = escapeState == sdl3::Input::KeyStates::Pressed;
+        const sdl3::Input::State escape = m_input.get_key_state(SDL_SCANCODE_ESCAPE);
+        const bool exit                 = escape == sdl3::Input::State::Pressed;
         if (exit) { return 0; }
 
         // Game update and render.
@@ -62,13 +61,13 @@ void Game::add_to_score(int64_t addScore) noexcept { m_score += addScore; }
 
 //                      ---- Private Functions ----
 
-void Game::update(const sdl3::Input &input) noexcept
+void Game::update() noexcept
 {
     // Kill offscreen objects.
     Game::purge_offscreen_objects();
 
     // Loop and update objects.
-    for (auto &object : m_objects) { object->update(*this, input); }
+    for (auto &object : m_objects) { object->update(*this, m_input); }
 
     // Roll to spawn enemy. 15% chance.
     const bool spawnEnemy = (std::rand() % 100) <= 3;

@@ -1,17 +1,16 @@
 #include "Texture.hpp"
 
-#include "sdl3.hpp"
+#include "SDL3.hpp"
 
 #include <SDL3_image/SDL_image.h>
 
 //                      ---- Construction ----
 
-sdl3::Texture::Texture(std::string_view texturePath)
+sdl3::Texture::Texture(SDL_Renderer *renderer, std::string_view texturePath)
+    : m_renderer{renderer}
 {
-    Texture::initialize_static_members();
-
     // Load the texture with SDL_image.
-    m_texture = IMG_LoadTexture(sdl3::SDL3::get_renderer(), texturePath.data());
+    m_texture = IMG_LoadTexture(m_renderer, texturePath.data());
     if (!m_texture) { return; }
 
     // Get the width and height.
@@ -22,25 +21,23 @@ sdl3::Texture::Texture(std::string_view texturePath)
     m_isValid = true;
 }
 
-sdl3::Texture::Texture(sdl3::Surface &surface)
-    : m_width{static_cast<float>(surface->w)}
+sdl3::Texture::Texture(SDL_Renderer *renderer, sdl3::Surface &surface)
+    : m_renderer{renderer}
+    , m_width{static_cast<float>(surface->w)}
     , m_height{static_cast<float>(surface->h)}
 {
-    Texture::initialize_static_members();
-
-    m_texture = SDL_CreateTextureFromSurface(sm_renderer, surface.get());
+    m_texture = SDL_CreateTextureFromSurface(m_renderer, surface.get());
     if (!m_texture) { return; }
 
     m_isValid = true;
 }
 
-sdl3::Texture::Texture(int width, int height, SDL_TextureAccess accessFlags)
-    : m_width{static_cast<float>(width)}
+sdl3::Texture::Texture(SDL_Renderer *renderer, int width, int height, SDL_TextureAccess accessFlags)
+    : m_renderer{renderer}
+    , m_width{static_cast<float>(width)}
     , m_height{static_cast<float>(height)}
 {
-    Texture::initialize_static_members();
-
-    m_texture = SDL_CreateTexture(sm_renderer, SDL_PIXELFORMAT_ABGR8888, accessFlags, width, height);
+    m_texture = SDL_CreateTexture(m_renderer, SDL_PIXELFORMAT_ABGR8888, accessFlags, width, height);
     if (!m_texture) { return; }
 
     m_isValid = true;
@@ -73,7 +70,7 @@ bool sdl3::Texture::render(int x, int y)
     const SDL_FRect destRect   = {.x = static_cast<float>(x), .y = static_cast<float>(y), .w = m_width, .h = m_height};
 
     // Just return this. It's easier.
-    return SDL_RenderTexture(sm_renderer, m_texture, &sourceRect, &destRect);
+    return SDL_RenderTexture(m_renderer, m_texture, &sourceRect, &destRect);
 }
 
 bool sdl3::Texture::render_stretched(int x, int y, int width, int height)
@@ -85,7 +82,7 @@ bool sdl3::Texture::render_stretched(int x, int y, int width, int height)
                                   .w = static_cast<float>(width),
                                   .h = static_cast<float>(height)};
 
-    return SDL_RenderTexture(sm_renderer, m_texture, &sourceRect, &destRect);
+    return SDL_RenderTexture(m_renderer, m_texture, &sourceRect, &destRect);
 }
 
 bool sdl3::Texture::render_part(int x, int y, int sourceX, int sourceY, int sourceWidth, int sourceHeight)
@@ -100,7 +97,7 @@ bool sdl3::Texture::render_part(int x, int y, int sourceX, int sourceY, int sour
                                   .w = static_cast<float>(sourceWidth),
                                   .h = static_cast<float>(sourceHeight)};
 
-    return SDL_RenderTexture(sm_renderer, m_texture, &sourceRect, &destRect);
+    return SDL_RenderTexture(m_renderer, m_texture, &sourceRect, &destRect);
 }
 
 bool sdl3::Texture::render_part_stretched(int x,
@@ -121,14 +118,5 @@ bool sdl3::Texture::render_part_stretched(int x,
                                   .w = static_cast<float>(width),
                                   .h = static_cast<float>(height)};
 
-    return SDL_RenderTexture(sm_renderer, m_texture, &sourceRect, &destRect);
-}
-
-//                      ---- Private Functions ----
-
-void sdl3::Texture::initialize_static_members()
-{
-    if (sm_renderer) { return; }
-
-    sm_renderer = sdl3::SDL3::get_renderer();
+    return SDL_RenderTexture(m_renderer, m_texture, &sourceRect, &destRect);
 }

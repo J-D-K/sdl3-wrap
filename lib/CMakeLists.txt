@@ -12,7 +12,8 @@ set(SOURCE_FILES
     source/Font.cpp
     source/Input.cpp
     source/SDL3.cpp
-    source/Texture.cpp)
+    source/Texture.cpp
+    source/Window.cpp)
 
 set(LIBRARIES
     -lSDL3_image

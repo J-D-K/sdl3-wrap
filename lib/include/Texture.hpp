@@ -26,18 +26,21 @@ namespace sdl3
             Texture() = default;
 
             /// @brief Creates and loads a texture from the path passed.
+            /// @param renderer Pointer to the renderer used by the texture.
             /// @param texturePath Path to the texture to load.
-            Texture(std::string_view texturePath);
+            Texture(SDL_Renderer *renderer, std::string_view texturePath);
 
             /// @brief Creates a texture from the surface passed.
+            /// @param renderer Pointer to the renderer used by the texture.
             /// @param surface Surface to create the texture from.
-            Texture(sdl3::Surface &surface);
+            Texture(SDL_Renderer *renderer, sdl3::Surface &surface);
 
             /// @brief Creates a blank texture using the flags passed.
+            /// @param renderer Pointer to the renderer used by the texture.
             /// @param width Width of the texture.
             /// @param height Height of the texture.
             /// @param accessFlags Access flags.
-            Texture(int width, int height, SDL_TextureAccess accessFlags);
+            Texture(SDL_Renderer *renderer, int width, int height, SDL_TextureAccess accessFlags);
 
             /// @brief Frees the texture once it's finished.
             ~Texture();
@@ -110,10 +113,10 @@ namespace sdl3
                                        int sourceWidth,
                                        int sourceHeight);
 
-            /// @brief This is used so the main class can set the render target.
-            friend class sdl3::SDL3;
-
         private:
+            /// @brief Pointer to the renderer.
+            SDL_Renderer *m_renderer{};
+
             /// @brief Pointer to the underlying SDL_Texture.
             SDL_Texture *m_texture{};
 
@@ -125,11 +128,5 @@ namespace sdl3
 
             /// @brief Flag storing whether or not the texture is valid.
             bool m_isValid{};
-
-            /// @brief Shared pointer to the renderer to avoid repeated calls to SDL3::get_renderer().
-            static inline SDL_Renderer *sm_renderer{};
-
-            /// @brief Initializes the pointer to the renderer shared by all texture instances.
-            void initialize_static_members();
     };
 }

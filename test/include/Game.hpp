@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Object.hpp"
-#include "sdl3.hpp"
+#include "SDL3.hpp"
 
 #include <memory>
 #include <span>
@@ -42,6 +42,12 @@ class Game final
         /// @brief Game score.
         int64_t m_score{};
 
+        /// @brief SDL3 Container instance.
+        sdl3::SDL3 m_sdl3{};
+
+        /// @brief Input instance.
+        sdl3::Input m_input{};
+
         /// @brief Test font.
         sdl3::SharedFont m_font{};
 
@@ -50,7 +56,7 @@ class Game final
 
         /// @brief Runs the update routine.
         /// @param input Reference to input passed from run.
-        void update(const sdl3::Input &input) noexcept;
+        void update() noexcept;
 
         /// @brief Runs the render routine.
         void render() noexcept;

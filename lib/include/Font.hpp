@@ -1,8 +1,10 @@
 #pragma once
 
+#include "Freetype.hpp"
 #include "OptionalReference.hpp"
 #include "Texture.hpp"
 
+#include <SDL3/SDL.h>
 #include <ft2build.h>
 #include <memory>
 #include <optional>
@@ -38,9 +40,10 @@ namespace sdl3
             Font() = default;
 
             /// @brief Loads the font from the path passed.
+            /// @param renderer Pointer to the renderer used by the font.
             /// @param fontPath Path of the font to load.
             /// @param pixelSize Size of the font in pixels.
-            Font(std::string_view fontPath, int pixelSize);
+            Font(SDL_Renderer *renderer, std::string_view fontPath, int pixelSize);
 
             /// @brief Frees the Freetype face.
             ~Font();
@@ -74,6 +77,9 @@ namespace sdl3
             /// @brief Size of the glyphs in pixels.
             int m_pixelSize{};
 
+            /// @brief Pointer to renderer used.
+            SDL_Renderer *m_renderer{};
+
             /// @brief Font face used.
             FT_Face m_fontFace{};
 
@@ -82,6 +88,9 @@ namespace sdl3
 
             /// @brief Glyphs mapped to their char for quick searching and retrieval.
             std::unordered_map<char, Font::GlyphData> m_cacheMap{};
+
+            /// @brief All font instances share this instance of freetype.
+            static inline sdl3::Freetype sm_freetype{};
 
             /// @brief Attempts to find the glyph for the character passed. If that fails, it's loaded using freetype.
             /// @param charCode Character to search for or load.

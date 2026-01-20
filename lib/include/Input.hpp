@@ -1,6 +1,7 @@
 #pragma once
 
 #include <SDL3/SDL.h>
+#include <array>
 #include <cstdint>
 #include <unordered_map>
 
@@ -16,16 +17,16 @@ namespace sdl3
             Input &operator=(Input &&)      = delete;
 
             /// @brief Enum for comparing key states to make this more console-like.
-            enum class KeyStates : uint8_t
+            enum class State : uint8_t
             {
-                Idle     = 0,
-                Pressed  = 1 << 1,
-                Held     = 1 << 2,
-                Released = 1 << 3
+                Idle,
+                Pressed,
+                Held,
+                Released
             };
 
             /// @brief Initializes input. We use a custom input to make it more console like and easier to read states.
-            Input();
+            Input() = default;
 
             /// @brief Updates the internal input data.
             void update() noexcept;
@@ -33,7 +34,7 @@ namespace sdl3
             /// @brief Returns the state for the scancode passed.
             /// @param scancode Key to get the state for.
             /// @return Const reference to the scan code.
-            KeyStates get_key_state(SDL_Scancode scancode) const noexcept;
+            State get_key_state(SDL_Scancode scancode) const noexcept;
 
             /// @brief Returns the mouse button flags.
             SDL_MouseButtonFlags get_mouse_flags() const noexcept;
@@ -48,8 +49,8 @@ namespace sdl3
             /// @brief Number of keys found in the initialization.
             int m_keyCount{};
 
-            /// @brief Map for holding key states.
-            std::unordered_map<SDL_Scancode, Input::KeyStates> m_keyMap{};
+            /// @brief Array of key states.
+            std::array<Input::State, SDL_SCANCODE_COUNT> m_keyArray{State::Idle};
 
             /// @brief Stored mouse X.
             float m_mouseX{};
