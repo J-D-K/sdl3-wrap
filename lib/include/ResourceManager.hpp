@@ -30,7 +30,7 @@ namespace sdl3
                 auto &resourceMap        = manager.m_resourceMap;
 
                 // Purge unused/expired resources.
-                // manager.purge_expired();
+                manager.purge_expired();
 
                 // Search to see if the resource has been loaded previously.
                 auto findResource = resourceMap.find(resourceName);

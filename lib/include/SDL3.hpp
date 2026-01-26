@@ -1,39 +1,25 @@
 #pragma once
-
-#include "Font.hpp"
-#include "Input.hpp"
-#include "ResourceManager.hpp"
-#include "Texture.hpp"
-#include "Window.hpp"
+#include "CoreComponent.hpp"
 
 #include <SDL3/SDL.h>
-#include <string_view>
 
 namespace sdl3
 {
-    class SDL3 final
+    class SDL3 final : public sdl3::CoreComponent
     {
         public:
-            // No copying or moving.
-            SDL3(const SDL3 &)            = delete;
-            SDL3(SDL3 &&)                 = delete;
-            SDL3 &operator=(const SDL3 &) = delete;
-            SDL3 &operator=(SDL3 &&)      = delete;
+            /// @brief Initializes SDL3.
+            SDL3()
+            {
+                // Flags used to init SDL.
+                static constexpr SDL_InitFlags SDL_INIT_FLAGS = SDL_INIT_AUDIO | SDL_INIT_EVENTS | SDL_INIT_GAMEPAD;
+                m_isInitialized                               = SDL_Init(SDL_INIT_FLAGS);
+            }
 
-            /// @brief Constructor. Initializes SDL3 and freetype.
-            SDL3();
+            /// @brief Quits SDL3.
+            ~SDL3() { SDL_Quit(); }
 
-            /// @brief Destructor. Quits SDL.
-            ~SDL3();
-
-            /// @brief Returns whether or not initializing SDL3 was successful.
-            bool is_initialized() const noexcept;
-
-            /// @brief Wrapper around SDL_PumpEvents.
-            void pump_events();
-
-        private:
-            /// @brief Stores whether or not initialization was successful.
-            bool m_isInitialized{};
+            /// @brief Pump events wrapper.
+            inline void pump_events() { SDL_PumpEvents(); }
     };
 }

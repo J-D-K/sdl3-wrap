@@ -1,5 +1,6 @@
 #pragma once
 
+#include "Renderer.hpp"
 #include "Surface.hpp"
 
 #include <SDL3/SDL.h>
@@ -16,6 +17,7 @@ namespace sdl3
     /// @brief This makes things easier to type.
     using SharedTexture = std::shared_ptr<Texture>;
 
+    /// @brief Texture wrapper class.
     class Texture final
     {
         public:
@@ -28,12 +30,12 @@ namespace sdl3
             /// @brief Creates and loads a texture from the path passed.
             /// @param renderer Pointer to the renderer used by the texture.
             /// @param texturePath Path to the texture to load.
-            Texture(SDL_Renderer *renderer, std::string_view texturePath);
+            Texture(std::string_view texturePath);
 
             /// @brief Creates a texture from the surface passed.
             /// @param renderer Pointer to the renderer used by the texture.
             /// @param surface Surface to create the texture from.
-            Texture(SDL_Renderer *renderer, sdl3::Surface &surface);
+            Texture(sdl3::Surface &surface);
 
             /// @brief Creates a blank texture using the flags passed.
             /// @param renderer Pointer to the renderer used by the texture.
@@ -61,7 +63,7 @@ namespace sdl3
             /// @return True on success. False on failure.
             bool set_color_mod(SDL_Color colorMod);
 
-            /// @brief Sets the scale mode for the text.
+            /// @brief Sets the scale mode for the texture.
             /// @param scaleMode Scale mode to set to.
             /// @return True on success. False on failure.
             bool set_scale_mode(SDL_ScaleMode scaleMode);
@@ -113,10 +115,11 @@ namespace sdl3
                                        int sourceWidth,
                                        int sourceHeight);
 
-        private:
-            /// @brief Pointer to the renderer.
-            SDL_Renderer *m_renderer{};
+            /// @brief Sets the current renderer for creating and rendering textures.
+            /// @param renderer Renderer to set.
+            static void set_renderer(const sdl3::Renderer &renderer);
 
+        private:
             /// @brief Pointer to the underlying SDL_Texture.
             SDL_Texture *m_texture{};
 
@@ -128,5 +131,8 @@ namespace sdl3
 
             /// @brief Flag storing whether or not the texture is valid.
             bool m_isValid{};
+
+            /// @brief Shared renderer pointer.
+            static inline SDL_Renderer *sm_renderer{};
     };
 }

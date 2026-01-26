@@ -11,17 +11,11 @@ find_package(Freetype REQUIRED)
 set(SOURCE_FILES
     source/Font.cpp
     source/Input.cpp
-    source/SDL3.cpp
-    source/Texture.cpp
-    source/Window.cpp)
-
-set(LIBRARIES
-    -lSDL3_image
-    -lpng
-    -ljpeg)
+    source/Texture.cpp)
 
 add_library(${PROJECT_NAME})
 
 target_include_directories(${PROJECT_NAME} PRIVATE include)
+target_compile_options(${PROJECT_NAME} PRIVATE -O3)
 target_sources(${PROJECT_NAME} PRIVATE ${SOURCE_FILES})
-target_link_libraries(${PROJECT_NAME} PRIVATE SDL3::SDL3 Freetype::Freetype)
+target_link_libraries(${PROJECT_NAME} PRIVATE SDL3::SDL3 Freetype::Freetype -lSDL3_image)

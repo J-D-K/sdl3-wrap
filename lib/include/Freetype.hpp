@@ -1,12 +1,17 @@
 #pragma once
 
+#include "CoreComponent.hpp"
+
 #include <ft2build.h>
 #include FT_FREETYPE_H
 
 namespace sdl3
 {
-    // Simple container class for Freetype.
-    class Freetype final
+    /// @brief This will prevent headaches later.
+    class Font;
+
+    /// @brief Freetype wrapper class.
+    class Freetype final : public sdl3::CoreComponent
     {
         public:
             // No copying or moving.
@@ -15,20 +20,26 @@ namespace sdl3
             Freetype &operator=(const Freetype &) = delete;
             Freetype &operator=(Freetype &&)      = delete;
 
-            /// @brief Constructor. Initializes library.
+            /// @brief Constructor. Initializes Freetype.
             Freetype()
             {
-                if (!m_library) { FT_Init_FreeType(&m_library); }
+                if (m_library) { return; }
+                const FT_Error initError = FT_Init_FreeType(&m_library);
+                if (initError != 0) { return; }
+
+                m_isInitialized = true;
             }
 
-            /// @brief Destructor needs to be public.
+            /// @brief Exits Freetype.
             ~Freetype()
             {
-                if (m_library) { FT_Done_FreeType(m_library); }
+                if (!m_library) { return; }
+
+                FT_Done_FreeType(m_library);
             }
 
-            /// @brief Returns the freetype library.
-            FT_Library get_library() const noexcept { return m_library; }
+            /// @brief Allows font to access the library.
+            friend class Font;
 
         private:
             /// @brief Freetype library.

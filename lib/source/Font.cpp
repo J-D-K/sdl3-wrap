@@ -11,9 +11,8 @@
 
 //                      ---- Construction ----
 
-sdl3::Font::Font(SDL_Renderer *renderer, std::string_view fontPath, int pixelSize)
-    : m_renderer{renderer}
-    , m_pixelSize{pixelSize}
+sdl3::Font::Font(std::string_view fontPath, int pixelSize)
+    : m_pixelSize{pixelSize}
 {
     // Attempt to get the file size of the font.
     const size_t fontSize = std::filesystem::file_size(fontPath);
@@ -32,11 +31,8 @@ sdl3::Font::Font(SDL_Renderer *renderer, std::string_view fontPath, int pixelSiz
     if (fontFile.gcount() != fontSize) { return; }
 
     // Create the font face.
-    FT_Error ftError = FT_New_Memory_Face(sm_freetype.get_library(),
-                                          reinterpret_cast<FT_Byte *>(m_fontBuffer.get()),
-                                          fontSize,
-                                          0,
-                                          &m_fontFace);
+    FT_Error ftError =
+        FT_New_Memory_Face(sm_freetype.m_library, reinterpret_cast<FT_Byte *>(m_fontBuffer.get()), fontSize, 0, &m_fontFace);
     if (ftError != 0) { return; }
 
     // Set the size.
@@ -199,6 +195,8 @@ sdl3::OptionalReference<sdl3::Font::GlyphData> sdl3::Font::find_load_glyph(char 
     // Convert to texture.
     sdl3::SharedTexture glyphTexture = Font::convert_glyph_to_texture(charCode, glyphBitmap);
 
+    glyphTexture->set_scale_mode(SDL_SCALEMODE_NEAREST);
+
     // Add to cache map.
     // Struct
     Font::GlyphData cacheData = {.advanceX = static_cast<int16_t>(glyphSlot->advance.x >> 6),
@@ -236,8 +234,8 @@ sdl3::SharedTexture sdl3::Font::convert_glyph_to_texture(char charCode, const FT
     for (size_t i = 0; i < bitmapSize; i++) { surfacePixels[i] = BASE_PIXEL_COLOR | bitmapPixels[i]; }
 
     // Name for the texture manager to keep track.
-    const std::string glyphName = std::format("{}-{}", charCode, m_pixelSize);
+    const std::string glyphName = std::format("{:02X} - {}", charCode, m_pixelSize);
 
     // Return the texture. We're going to use a name here instead of a path.
-    return sdl3::TextureManager::load_resource(glyphName, m_renderer, surface);
+    return sdl3::TextureManager::load_resource(glyphName, surface);
 }

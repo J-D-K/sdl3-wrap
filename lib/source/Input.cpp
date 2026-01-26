@@ -1,5 +1,6 @@
 #include "Input.hpp"
 
+#include <cmath>
 #include <span>
 
 //                      ---- Construction ----
@@ -9,7 +10,7 @@
 void sdl3::Input::update() noexcept
 {
     // Update mouse.
-    m_mouseFlags = SDL_GetMouseState(&m_mouseX, &m_mouseX);
+    m_mouseFlags = SDL_GetMouseState(&m_mouseX, &m_mouseY);
 
     // Grab the array of key states from SDL.
     std::span<const bool> keystates{SDL_GetKeyboardState(nullptr), SDL_SCANCODE_COUNT};
@@ -26,9 +27,9 @@ sdl3::Input::State sdl3::Input::get_key_state(SDL_Scancode scancode) const noexc
 
 SDL_MouseButtonFlags sdl3::Input::get_mouse_flags() const noexcept { return m_mouseFlags; }
 
-float sdl3::Input::get_mouse_x() const noexcept { return m_mouseX; }
+int sdl3::Input::get_mouse_x() const noexcept { return std::round(m_mouseX); }
 
-float sdl3::Input::get_mouse_y() const noexcept { return m_mouseY; }
+int sdl3::Input::get_mouse_y() const noexcept { return std::round(m_mouseY); }
 
 //                      ---- Private Functions ----
 

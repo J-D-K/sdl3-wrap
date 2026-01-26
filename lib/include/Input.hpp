@@ -16,6 +16,9 @@ namespace sdl3
             Input &operator=(const Input &) = delete;
             Input &operator=(Input &&)      = delete;
 
+            /// @brief Default constructor. Nothing needs manual initialization.
+            Input() = default;
+
             /// @brief Enum for comparing key states to make this more console-like.
             enum class State : uint8_t
             {
@@ -24,9 +27,6 @@ namespace sdl3
                 Held,
                 Released
             };
-
-            /// @brief Initializes input. We use a custom input to make it more console like and easier to read states.
-            Input() = default;
 
             /// @brief Updates the internal input data.
             void update() noexcept;
@@ -40,15 +40,12 @@ namespace sdl3
             SDL_MouseButtonFlags get_mouse_flags() const noexcept;
 
             /// @brief Returns the current X position of the mouse.
-            float get_mouse_x() const noexcept;
+            int get_mouse_x() const noexcept;
 
             /// @brief Returns the current Y position of the mouse.
-            float get_mouse_y() const noexcept;
+            int get_mouse_y() const noexcept;
 
         private:
-            /// @brief Number of keys found in the initialization.
-            int m_keyCount{};
-
             /// @brief Array of key states.
             std::array<Input::State, SDL_SCANCODE_COUNT> m_keyArray{State::Idle};
 
