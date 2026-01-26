@@ -23,8 +23,7 @@ GBTiler::GBTiler(std::span<const char *> argv)
     GBTiler::initialize_edit_menu();
 
     // These are for printing debug info.
-    m_mouseX = GBTiler::new_ui_element<ui::Text>(0, 32, ui::colors::WHITE, "");
-    m_mouseY = GBTiler::new_ui_element<ui::Text>(0, 50, ui::colors::WHITE, "");
+    m_mouseCoords = GBTiler::new_ui_element<ui::Text>(0, 20, ui::colors::WHITE, "");
 }
 
 //                      ---- Public Functions ----
@@ -47,10 +46,17 @@ int GBTiler::run()
         m_frameLimiter.begin_cap();
 
         // Update the strings for these.
-        const std::string mouseX = std::format("Mouse X: {}", m_input.get_mouse_x());
-        const std::string mouseY = std::format("Mouse Y: {}", m_input.get_mouse_y());
-        m_mouseX->set_text(mouseX);
-        m_mouseY->set_text(mouseY);
+        const uint8_t mouseLeft   = static_cast<uint8_t>(m_input.get_mouse_button_state(sdl3::Input::MouseButton::Left));
+        const uint8_t mouseMiddle = static_cast<uint8_t>(m_input.get_mouse_button_state(sdl3::Input::MouseButton::Middle));
+        const uint8_t mouseRight  = static_cast<uint8_t>(m_input.get_mouse_button_state(sdl3::Input::MouseButton::Right));
+
+        const std::string mouseCoords = std::format("Mouse X: {}\nMouse Y: {}\nMouse Left: {}\nMouse Mid: {}\nMouse Right: {}",
+                                                    m_input.get_mouse_x(),
+                                                    m_input.get_mouse_y(),
+                                                    mouseLeft,
+                                                    mouseMiddle,
+                                                    mouseRight);
+        m_mouseCoords->set_text(mouseCoords);
 
         // Update and render.
         GBTiler::update();

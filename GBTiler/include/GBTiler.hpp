@@ -55,10 +55,7 @@ class GBTiler final
         std::shared_ptr<ui::MenuBar> m_menuBar{};
 
         /// @brief These are just debugging strings.
-        std::shared_ptr<ui::Text> m_mouseX{};
-
-        /// @brief Debugging string.
-        std::shared_ptr<ui::Text> m_mouseY{};
+        std::shared_ptr<ui::Text> m_mouseCoords{};
 
         /// @brief Vector of elements.
         std::vector<std::shared_ptr<ui::Element>> m_elements{};
