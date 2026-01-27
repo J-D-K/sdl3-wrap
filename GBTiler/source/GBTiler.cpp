@@ -19,8 +19,6 @@ GBTiler::GBTiler(std::span<const char *> argv)
 
     // Setup menus.
     GBTiler::initialize_menu_bar();
-    GBTiler::initialize_file_menu();
-    GBTiler::initialize_edit_menu();
 
     // These are for printing debug info.
     m_mouseCoords = GBTiler::new_ui_element<ui::Text>(0, 20, ui::colors::WHITE, "");
@@ -50,12 +48,7 @@ int GBTiler::run()
         const uint8_t mouseMiddle = static_cast<uint8_t>(m_input.get_mouse_button_state(sdl3::Input::MouseButton::Middle));
         const uint8_t mouseRight  = static_cast<uint8_t>(m_input.get_mouse_button_state(sdl3::Input::MouseButton::Right));
 
-        const std::string mouseCoords = std::format("Mouse X: {}\nMouse Y: {}\nMouse Left: {}\nMouse Mid: {}\nMouse Right: {}",
-                                                    m_input.get_mouse_x(),
-                                                    m_input.get_mouse_y(),
-                                                    mouseLeft,
-                                                    mouseMiddle,
-                                                    mouseRight);
+        const std::string mouseCoords = std::format("Mouse X: {}\nMouse Y: {}", m_input.get_mouse_x(), m_input.get_mouse_y());
         m_mouseCoords->set_text(mouseCoords);
 
         // Update and render.
@@ -85,6 +78,10 @@ void GBTiler::initialize_menu_bar()
 {
     // Create the menu bar.
     m_menuBar = GBTiler::new_ui_element<ui::MenuBar>();
+
+    // Create all of the main menu labels.
+    GBTiler::initialize_file_menu();
+    GBTiler::initialize_layer_menu();
 }
 
 void GBTiler::initialize_file_menu()
@@ -96,8 +93,8 @@ void GBTiler::initialize_file_menu()
     m_menuBar->add_menu(fileMenu);
 }
 
-void GBTiler::initialize_edit_menu()
+void GBTiler::initialize_layer_menu()
 {
-    auto editMenu = ui::Menu::create("Edit");
-    m_menuBar->add_menu(editMenu);
+    auto layerMenu = ui::Menu::create("Layer");
+    m_menuBar->add_menu(layerMenu);
 }

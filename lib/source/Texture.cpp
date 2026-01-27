@@ -1,6 +1,4 @@
-#include "Texture.hpp"
-
-#include "SDL3.hpp"
+#include "sdl3/Texture.hpp"
 
 #include <SDL3_image/SDL_image.h>
 

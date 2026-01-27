@@ -1,4 +1,4 @@
-#include "Input.hpp"
+#include "sdl3/Input.hpp"
 
 #include <cmath>
 #include <span>

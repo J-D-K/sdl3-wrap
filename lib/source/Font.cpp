@@ -1,8 +1,8 @@
-#include "Font.hpp"
+#include "sdl3/Font.hpp"
 
-#include "Freetype.hpp"
-#include "ResourceManager.hpp"
-#include "Surface.hpp"
+#include "sdl3/Freetype.hpp"
+#include "sdl3/ResourceManager.hpp"
+#include "sdl3/Surface.hpp"
 
 #include <filesystem>
 #include <format>

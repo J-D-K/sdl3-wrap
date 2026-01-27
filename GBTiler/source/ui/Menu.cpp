@@ -6,7 +6,7 @@
 namespace
 {
     constexpr int MENU_PADDING = 24;
-    constexpr int MENU_HEIGHT  = 18;
+    constexpr int MENU_HEIGHT  = 20;
 }
 
 //                      ---- Construction ----
@@ -35,10 +35,14 @@ void ui::Menu::add_sub_option(std::string_view option, std::function<void()> onC
 
 void ui::Menu::update(const sdl3::Input &input)
 {
+    // Left mouse button state.
+    const sdl3::Input::State leftMouse = input.get_mouse_button_state(sdl3::Input::MouseButton::Left);
+
     // Conditions for updating the state of the menu.
     const bool mouseWithin = Element::mouse_is_within(input);
     const bool isIdle      = (m_state == State::Hovered || m_state == State::Clicked) && !mouseWithin;
     const bool isHovered   = m_state == State::Idle && mouseWithin;
+    const bool isClicked   = m_state == State::Hovered && leftMouse == sdl3::Input::State::Pressed;
 
     if (isIdle) { m_state = State::Idle; }
     else if (isHovered) { m_state = State::Hovered; }

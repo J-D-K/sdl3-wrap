@@ -72,6 +72,6 @@ class GBTiler final
         /// @brief Creates the file menu and adds it to the menu bar.
         void initialize_file_menu();
 
-        /// @brief Creates the edit menu and adds it to the menu bar.
-        void initialize_edit_menu();
+        /// @brief Initializes the layer changing menu.
+        void initialize_layer_menu();
 };
