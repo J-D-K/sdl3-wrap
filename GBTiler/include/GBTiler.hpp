@@ -36,6 +36,9 @@ class GBTiler final
         }
 
     private:
+        /// @brief Whether or not the program should keep running.
+        bool m_running{};
+
         /// @brief SDL3 instance.
         sdl3::SDL3 m_sdl3{};
 

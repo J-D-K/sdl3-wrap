@@ -2,6 +2,7 @@
 
 namespace sdl3
 {
+    /// @brief CoreComponent class that handles recording and reporting valid initialization.
     class CoreComponent
     {
         public:

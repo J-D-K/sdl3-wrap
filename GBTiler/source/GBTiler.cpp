@@ -14,6 +14,12 @@ GBTiler::GBTiler(std::span<const char *> argv)
     , m_input{}
     , m_frameLimiter{}
 {
+    const bool initFailed = !m_sdl3.is_initialized() || !m_window.is_initialized() || !m_renderer.is_initialized();
+    if (initFailed) { return; }
+
+    // Should be running.
+    m_running = true;
+
     // Init texture.
     sdl3::Texture::set_renderer(m_renderer);
 
@@ -21,14 +27,15 @@ GBTiler::GBTiler(std::span<const char *> argv)
     GBTiler::initialize_menu_bar();
 
     // These are for printing debug info.
-    m_mouseCoords = GBTiler::new_ui_element<ui::Text>(0, 20, ui::colors::WHITE, "");
+    const int mouseCoordsX = window::HEIGHT - ui::font::SIZE * 2.5;
+    m_mouseCoords          = GBTiler::new_ui_element<ui::Text>(0, mouseCoordsX, ui::colors::WHITE, "");
 }
 
 //                      ---- Public Functions ----
 
 int GBTiler::run()
 {
-    for (;;)
+    while (m_running)
     {
         // Pump.
         m_sdl3.pump_events();
@@ -58,6 +65,7 @@ int GBTiler::run()
         // Engage frame limiter.
         m_frameLimiter.end_cap();
     }
+    return -1;
 }
 
 //                      ---- Private Functions ----
@@ -88,6 +96,15 @@ void GBTiler::initialize_file_menu()
 {
     // Create the menu.
     auto fileMenu = ui::Menu::create("File");
+
+    // Option lambdas.
+    auto exitLambda = [this]() { this->m_running = false; };
+
+    // Add the options.
+    fileMenu->add_sub_option("Open", nullptr);
+    fileMenu->add_sub_option("Save", nullptr);
+    fileMenu->add_sub_option("Save As", nullptr);
+    fileMenu->add_sub_option("Exit", exitLambda);
 
     // Push to menu bar.
     m_menuBar->add_menu(fileMenu);

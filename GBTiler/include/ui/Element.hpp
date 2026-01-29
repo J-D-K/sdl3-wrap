@@ -1,25 +1,34 @@
 #pragma once
 #include "sdl3.hpp"
+#include "ui/font.hpp"
+#include "util/is_within.hpp"
 
 namespace ui
 {
+    /// @brief Base UI Element.
     class Element
     {
         public:
             /// @brief Default constructor.
-            Element() = default;
+            Element() { Element::initialize_static_members(); }
 
             /// @brief Constructor that allows setting X and Y.
             Element(int x, int y)
                 : m_x{x}
-                , m_y{y} {};
+                , m_y{y}
+            {
+                Element::initialize_static_members();
+            }
 
             /// @brief Constructor that allows setting X, Y, Width, and Height.
             Element(int x, int y, int width, int height)
                 : m_x{x}
                 , m_y{y}
                 , m_width{width}
-                , m_height{height} {};
+                , m_height{height}
+            {
+                Element::initialize_static_members();
+            }
 
             /// @brief Virtual update function.
             /// @param input Reference to sdl3 input instance.
@@ -29,14 +38,29 @@ namespace ui
             /// @param renderer Reference to SDL3 renderer instance.
             virtual void render(sdl3::Renderer &renderer) {}
 
-            /// @brief Sets the X and Y coordinates of the Element.
-            /// @param x X to set.
-            /// @param y Y to set.
-            void set_x_y(int x, int y)
-            {
-                m_x = x;
-                m_y = y;
-            }
+            /// @brief Returns the X.
+            int get_x() const noexcept { return m_x; }
+
+            /// @brief Returns the Y.
+            int get_y() const noexcept { return m_y; }
+
+            /// @brief Returns the width.
+            int get_width() const noexcept { return m_width; }
+
+            /// @brief Returns the height.
+            int get_height() const noexcept { return m_height; }
+
+            /// @brief Sets the X.
+            virtual void set_x(int x) noexcept { m_x = x; }
+
+            /// @brief Sets the Y.
+            virtual void set_y(int y) noexcept { m_y = y; }
+
+            /// @brief Sets the width.
+            virtual void set_width(int width) noexcept { m_width = width; }
+
+            /// @brief Sets the height.
+            virtual void set_height(int height) noexcept { m_height = height; }
 
             /// @brief Returns whether or not the mouse is within the X and Y coordinates of the element.
             inline bool mouse_is_within(const sdl3::Input &input)
@@ -45,11 +69,7 @@ namespace ui
                 const int mouseX = input.get_mouse_x();
                 const int mouseY = input.get_mouse_y();
 
-                // Check if the mouse is outside our area and return the inverse.
-                const bool outsideX = mouseX < m_x || mouseX > m_x + m_width;
-                const bool outsideY = mouseY < m_y || mouseY > m_y + m_height;
-
-                return !outsideX && !outsideY;
+                return util::is_within(mouseX, mouseY, m_x, m_y, m_width, m_height);
             }
 
         protected:
@@ -64,5 +84,16 @@ namespace ui
 
             /// @brief Height of the element.
             int m_height{};
+
+            /// @brief Static pointer to the UI font all elements share.
+            static inline sdl3::SharedFont sm_uiFont{};
+
+            /// @brief Initializes the static members.
+            void initialize_static_members()
+            {
+                if (sm_uiFont) { return; }
+
+                sm_uiFont = sdl3::FontManager::load_resource(ui::font::PATH, ui::font::PATH, ui::font::SIZE);
+            }
     };
 }

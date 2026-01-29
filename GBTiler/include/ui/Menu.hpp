@@ -1,5 +1,6 @@
 #pragma once
 #include "ui/Element.hpp"
+#include "ui/MenuOption.hpp"
 
 #include <functional>
 #include <memory>
@@ -25,9 +26,9 @@ namespace ui
             static inline std::unique_ptr<Menu> create(std::string_view label) { return std::make_unique<Menu>(label); }
 
             /// @brief Adds a suboption to the menu.
-            /// @param option Text/label displayed.
+            /// @param label Text/label displayed.
             /// @param onClick Function executed on click.
-            void add_sub_option(std::string_view option, std::function<void()> onClick);
+            void add_sub_option(std::string_view label, std::function<void()> onClick);
 
             /// @brief Update override.
             void update(const sdl3::Input &input) override;
@@ -59,22 +60,43 @@ namespace ui
             /// @brief Width of the label text.
             int m_labelWidth{};
 
+            /// @brief The current Y coordinate for creating sub-options.
+            int m_subY{};
+
+            /// @brief Width of the menu when it's opened.
+            int m_openWidth{};
+
+            /// @brief The height of the menu when it's opened.
+            int m_openHeight{};
+
             /// @brief State the menu is currently in.
             Menu::State m_state{};
 
             /// @brief Vector of sub options and their on click function.
-            std::vector<std::pair<std::string, std::function<void()>>> m_subOptions{};
+            std::vector<ui::MenuOption> m_subOptions{};
 
-            /// @brief Shared pointer to the UI font.
-            static inline sdl3::SharedFont sm_uiFont{};
+            /// @brief Handles updating the state for idle.
+            void update_idle(const sdl3::Input &input) noexcept;
 
-            /// @brief Inits the UI font and sets if it hasn't been already.
-            void initialize_static_members();
+            /// @brief Handles updating the state for hovering.
+            void update_hover(const sdl3::Input &input) noexcept;
+
+            /// @brief Handles updating the state when the menu is clicked or open.
+            void update_clicked(const sdl3::Input &input) noexcept;
 
             /// @brief Renders the main label menu as idle.
             void render_idle(sdl3::Renderer &renderer);
 
             /// @brief Renders the main label menu as hovered.
             void render_hover(sdl3::Renderer &renderer);
+
+            /// @brief Renders the main label as hovered and the suboptions.
+            void render_clicked(sdl3::Renderer &renderer);
+
+            /// @brief Checks and updates the sub-option width.
+            void update_sub_options() noexcept;
+
+            /// @brief Renders the sub options.
+            void render_sub_options(sdl3::Renderer &renderer) noexcept;
     };
 }

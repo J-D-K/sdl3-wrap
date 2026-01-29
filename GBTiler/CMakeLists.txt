@@ -16,7 +16,8 @@ set(MAIN_SOURCES
 
 set(UI_SOURCES
     source/ui/MenuBar.cpp
-    source/ui/Menu.cpp)
+    source/ui/Menu.cpp
+    source/ui/MenuOption.cpp)
 
 target_include_directories(${PROJECT_NAME} PRIVATE include ../lib/include)
 

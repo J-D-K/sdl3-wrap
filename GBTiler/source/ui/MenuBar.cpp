@@ -1,6 +1,7 @@
 #include "ui/MenuBar.hpp"
 
 #include "ui/colors.hpp"
+#include "ui/menudims.hpp"
 #include "window.hpp"
 
 //                      ---- Construction ----
@@ -23,15 +24,12 @@ void ui::MenuBar::render(sdl3::Renderer &renderer)
 
 void ui::MenuBar::add_menu(std::unique_ptr<ui::Menu> &menu)
 {
-    // This is the margin between two menus.
-    static constexpr int MENU_MARGIN = 2;
-
     // Set the coordinates for the new menu.
     menu->m_x      = m_currentX;
     menu->m_labelX = menu->m_x + ((menu->m_width / 2) - (menu->m_labelWidth / 2));
 
     // Increase our current X.
-    m_currentX += menu->m_width + MENU_MARGIN;
+    m_currentX += menu->m_width + ui::menudims::MARGIN;
 
     m_menus.push_back(std::move(menu));
 }
