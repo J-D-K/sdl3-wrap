@@ -95,7 +95,7 @@ void GBTiler::initialize_menu_bar()
 void GBTiler::initialize_file_menu()
 {
     // Create the menu.
-    auto fileMenu = ui::Menu::create("File");
+    auto &fileMenu = m_menuBar->create_add_menu("File");
 
     // Option lambdas.
     auto exitLambda = [this]() { this->m_running = false; };
@@ -105,13 +105,11 @@ void GBTiler::initialize_file_menu()
     fileMenu->add_sub_option("Save", nullptr);
     fileMenu->add_sub_option("Save As", nullptr);
     fileMenu->add_sub_option("Exit", exitLambda);
-
-    // Push to menu bar.
-    m_menuBar->add_menu(fileMenu);
 }
 
 void GBTiler::initialize_layer_menu()
 {
-    auto layerMenu = ui::Menu::create("Layer");
-    m_menuBar->add_menu(layerMenu);
+    auto &layerMenu = m_menuBar->create_add_menu("Layer");
+
+    layerMenu->add_sub_option("Add New Layer", nullptr);
 }

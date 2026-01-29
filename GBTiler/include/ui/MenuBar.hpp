@@ -19,9 +19,8 @@ namespace ui
             /// @brief Render override.
             void render(sdl3::Renderer &renderer) override;
 
-            /// @brief Adds a menu to the menu bar.
-            /// @param menu Unique ptr to menu added.
-            void add_menu(std::unique_ptr<ui::Menu> &menu);
+            /// @brief Creates and adds a new menu to the MenuBar.
+            std::unique_ptr<ui::Menu> &create_add_menu(std::string_view label);
 
         private:
             /// @brief Current X offset when piecing together the menu bar.

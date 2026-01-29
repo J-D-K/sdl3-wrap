@@ -22,14 +22,19 @@ void ui::MenuBar::render(sdl3::Renderer &renderer)
     for (auto &menu : m_menus) { menu->render(renderer); }
 }
 
-void ui::MenuBar::add_menu(std::unique_ptr<ui::Menu> &menu)
+std::unique_ptr<ui::Menu> &ui::MenuBar::create_add_menu(std::string_view label)
 {
-    // Set the coordinates for the new menu.
+    // Create new menu.
+    m_menus.push_back(std::make_unique<ui::Menu>(label));
+
+    // Reference for changes.
+    auto &menu = m_menus.back();
+
     menu->m_x      = m_currentX;
     menu->m_labelX = menu->m_x + ((menu->m_width / 2) - (menu->m_labelWidth / 2));
 
-    // Increase our current X.
+    // Increase the current X and add some margin.
     m_currentX += menu->m_width + ui::menudims::MARGIN;
 
-    m_menus.push_back(std::move(menu));
+    return menu;
 }
