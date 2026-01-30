@@ -19,10 +19,13 @@ set(UI_SOURCES
     source/ui/Menu.cpp
     source/ui/MenuOption.cpp)
 
+set(UTIL_SOURCES
+    source/util/filename.cpp)
+
 target_include_directories(${PROJECT_NAME} PRIVATE include ../lib/include)
 
 target_compile_options(${PROJECT_NAME} PRIVATE -O2)
-target_sources(${PROJECT_NAME} PRIVATE ${MAIN_SOURCES} ${UI_SOURCES})
+target_sources(${PROJECT_NAME} PRIVATE ${MAIN_SOURCES} ${UI_SOURCES} ${UTIL_SOURCES})
 
 target_link_options(${PROJECT_NAME} PRIVATE -s)
 target_link_libraries(${PROJECT_NAME} PRIVATE SDL3::SDL3 Freetype::Freetype sdl3wrapper)

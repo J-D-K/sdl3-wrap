@@ -4,6 +4,7 @@
 #include "ui/MenuBar.hpp"
 #include "ui/Text.hpp"
 
+#include <filesystem>
 #include <memory>
 #include <span>
 #include <vector>
@@ -39,6 +40,7 @@ class GBTiler final
         /// @brief Whether or not the program should keep running.
         bool m_running{};
 
+        //                      ---- SDL Related ----
         /// @brief SDL3 instance.
         sdl3::SDL3 m_sdl3{};
 
@@ -54,6 +56,7 @@ class GBTiler final
         /// @brief Frame limiter so the tiler runs at 60FPS.
         sdl3::FrameLimiter m_frameLimiter{};
 
+        //                      ---- UI Related ----
         /// @brief Menu bar.
         std::shared_ptr<ui::MenuBar> m_menuBar{};
 
@@ -62,6 +65,10 @@ class GBTiler final
 
         /// @brief Vector of elements.
         std::vector<std::shared_ptr<ui::Element>> m_elements{};
+
+        //                      ---- Map Related ----
+        /// @brief Current map path.
+        std::filesystem::path m_mapPath{};
 
         /// @brief Updates elements.
         void update();
@@ -74,6 +81,9 @@ class GBTiler final
 
         /// @brief Creates the file menu and adds it to the menu bar.
         void initialize_file_menu();
+
+        /// @brief Creates the tileset menu.
+        void initialize_tileset_menu();
 
         /// @brief Initializes the layer changing menu.
         void initialize_layer_menu();

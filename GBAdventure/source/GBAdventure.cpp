@@ -19,7 +19,7 @@ GBAdventure::GBAdventure()
     sdl3::Texture::set_renderer(m_renderer);
 
     // Set renderer logical.
-    m_renderer.set_logical_width_height(window::LOGICAL_WIDTH, window::LOGICAL_HEIGHT);
+    m_renderer.set_logical_width_height(window::LOGICAL_WIDTH, window::LOGICAL_HEIGHT, SDL_LOGICAL_PRESENTATION_STRETCH);
 
     // Push the title screen.
     StateManager::create_push_state<states::Titlescreen>();

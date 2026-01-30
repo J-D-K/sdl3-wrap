@@ -21,7 +21,7 @@ ui::Menu::Menu(std::string_view menuName)
     m_labelY = m_y + ((m_height / 2) - (ui::font::SIZE / 2));
 
     // Set the sub y.
-    m_subY = m_y + ui::menudims::HEIGHT;
+    m_subY = m_y + ui::menudims::HEIGHT + ui::menudims::MARGIN;
 }
 
 //                      ---- Public Functions ----
@@ -35,10 +35,10 @@ void ui::Menu::add_sub_option(std::string_view label, std::function<void()> onCl
     Menu::update_sub_options();
 
     // Increase our subY
-    m_subY += ui::menudims::HEIGHT;
+    m_subY += ui::menudims::HEIGHT + ui::menudims::MARGIN;
 
     // Increase our total height.
-    m_openHeight += ui::menudims::HEIGHT;
+    m_openHeight += ui::menudims::HEIGHT + ui::menudims::MARGIN;
 }
 
 void ui::Menu::update(const sdl3::Input &input)
@@ -132,6 +132,9 @@ void ui::Menu::render_clicked(sdl3::Renderer &renderer)
     // Start by rendering the main menu hovered.
     Menu::render_hover(renderer);
 
+    // Start by rendering a masking rectangle.
+    renderer.render_fill_rect(m_x, m_y + ui::menudims::HEIGHT, m_openWidth, m_openHeight, ui::colors::MENU);
+
     // Loop and render options.
     for (ui::MenuOption &option : m_subOptions) { option.render(renderer); }
 }
@@ -147,9 +150,4 @@ void ui::Menu::update_sub_options() noexcept
 
     // Loop and set them all accordingly.
     for (ui::MenuOption &option : m_subOptions) { option.set_width(m_openWidth); }
-}
-
-void ui::Menu::render_sub_options(sdl3::Renderer &renderer) noexcept
-{
-    for (ui::MenuOption &option : m_subOptions) { option.render(renderer); }
 }

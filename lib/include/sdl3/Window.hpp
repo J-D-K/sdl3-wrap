@@ -25,6 +25,12 @@ namespace sdl3
             /// @brief Constructor. Calls create() for you.
             Window(std::string_view title, int width, int height) { Window::create(title, width, height); }
 
+            /// @brief Constructor Calls create()
+            Window(std::string_view title, int width, int height, SDL_WindowFlags flags)
+            {
+                Window::create(title, width, height, flags);
+            }
+
             /// @brief Destructor. Destroys the window.
             ~Window()
             {
@@ -45,6 +51,19 @@ namespace sdl3
 
                 // Create the window.
                 m_window = SDL_CreateWindow(title.data(), width, height, 0);
+                if (!m_window) { return; }
+
+                m_isInitialized = true;
+            }
+
+            /// @brief Creates the window and allows custom flags to be passed.
+            /// @param flags Flags to pass to create().
+            void create(std::string_view title, int width, int height, SDL_WindowFlags flags)
+            {
+                m_width  = width;
+                m_height = height;
+
+                m_window = SDL_CreateWindow(title.data(), width, height, flags);
                 if (!m_window) { return; }
 
                 m_isInitialized = true;

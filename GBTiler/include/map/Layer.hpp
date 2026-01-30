@@ -1,6 +1,8 @@
 #pragma once
 #include "map/"
+#include "map/Tile.hpp"
 #include "map/Tileset.hpp"
+#include "sdl3.hpp"
 
 #include <vector>
 
@@ -13,29 +15,22 @@ namespace map
             /// @brief Map layer constructor.
             /// @param columns Number of 16 pixel wide columns.
             /// @param rows Number of 16 pixel tall rows.
-            Layer(map::SharedTileset tileset, int columns, int rows);
+            Layer(int columns, int rows);
 
             /// @brief Updates the tiles in the map layer.
             /// @param input Reference to SDL3 input instance.
-            void update(const sdl3::Input &input);
+            /// @param index Index of the current selected tile.
+            void update(const sdl3::Input &input, int index);
 
-            /// @brief Renders the map.
-            void render();
+            /// @brief Renders the map layer.
+            /// @param tileset Reference to shared tileset to render the layer with.
+            void render(map::SharedTileset &tileset);
 
         private:
-            // clang-format off
-            struct Tile
-            {
-                int x{};
-                int y{};
-                int index{};
-            };
-            // clang-format on 
-
             /// @brief Vector containing the tiles for the layer.
-            std::vector<Tile> m_tiles{};
+            std::vector<map::Tile> m_tiles{};
 
-            /// @brief Shared pointer to the tileset.
-            map::SharedTileset m_tileset{};
+            /// @brief Render target to render the layer to.
+            sdl3::SharedTexture m_layerBuffer{};
     };
 }

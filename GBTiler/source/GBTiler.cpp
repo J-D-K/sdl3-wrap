@@ -3,13 +3,14 @@
 #include "ui/Menu.hpp"
 #include "ui/Text.hpp"
 #include "ui/colors.hpp"
+#include "util/filename.hpp"
 #include "window.hpp"
 
 //                      ---- Construction ----
 
 GBTiler::GBTiler(std::span<const char *> argv)
     : m_sdl3{}
-    , m_window{window::TITLE, window::WIDTH, window::HEIGHT}
+    , m_window{window::TITLE, m_sdl3.get_display_width(), m_sdl3.get_display_height(), SDL_WINDOW_BORDERLESS}
     , m_renderer{m_window}
     , m_input{}
     , m_frameLimiter{}
@@ -27,8 +28,8 @@ GBTiler::GBTiler(std::span<const char *> argv)
     GBTiler::initialize_menu_bar();
 
     // These are for printing debug info.
-    const int mouseCoordsX = window::HEIGHT - ui::font::SIZE * 2.5;
-    m_mouseCoords          = GBTiler::new_ui_element<ui::Text>(0, mouseCoordsX, ui::colors::WHITE, "");
+    const int mouseCoordsY = m_renderer.get_height() - ui::font::SIZE * 2.5;
+    m_mouseCoords          = GBTiler::new_ui_element<ui::Text>(0, mouseCoordsY, ui::colors::WHITE, "");
 }
 
 //                      ---- Public Functions ----
@@ -49,11 +50,6 @@ int GBTiler::run()
 
         // Begin frame limiter.
         m_frameLimiter.begin_cap();
-
-        // Update the strings for these.
-        const uint8_t mouseLeft   = static_cast<uint8_t>(m_input.get_mouse_button_state(sdl3::Input::MouseButton::Left));
-        const uint8_t mouseMiddle = static_cast<uint8_t>(m_input.get_mouse_button_state(sdl3::Input::MouseButton::Middle));
-        const uint8_t mouseRight  = static_cast<uint8_t>(m_input.get_mouse_button_state(sdl3::Input::MouseButton::Right));
 
         const std::string mouseCoords = std::format("Mouse X: {}\nMouse Y: {}", m_input.get_mouse_x(), m_input.get_mouse_y());
         m_mouseCoords->set_text(mouseCoords);
@@ -89,6 +85,7 @@ void GBTiler::initialize_menu_bar()
 
     // Create all of the main menu labels.
     GBTiler::initialize_file_menu();
+    GBTiler::initialize_tileset_menu();
     GBTiler::initialize_layer_menu();
 }
 
@@ -98,18 +95,27 @@ void GBTiler::initialize_file_menu()
     auto &fileMenu = m_menuBar->create_add_menu("File");
 
     // Option lambdas.
+    auto openLambda = [this]() { util::get_open_filename("", "Map Files\0*.map"); };
     auto exitLambda = [this]() { this->m_running = false; };
 
     // Add the options.
-    fileMenu->add_sub_option("Open", nullptr);
+    fileMenu->add_sub_option("Open", openLambda);
     fileMenu->add_sub_option("Save", nullptr);
     fileMenu->add_sub_option("Save As", nullptr);
     fileMenu->add_sub_option("Exit", exitLambda);
+}
+
+void GBTiler::initialize_tileset_menu()
+{
+    auto &tileMenu = m_menuBar->create_add_menu("Tileset");
+
+    tileMenu->add_sub_option("Load Tileset", nullptr);
 }
 
 void GBTiler::initialize_layer_menu()
 {
     auto &layerMenu = m_menuBar->create_add_menu("Layer");
 
-    layerMenu->add_sub_option("Add New Layer", nullptr);
+    layerMenu->add_sub_option("Layer 1", nullptr);
+    layerMenu->add_sub_option("Layer 2", nullptr);
 }

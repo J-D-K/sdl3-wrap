@@ -16,7 +16,7 @@ void ui::MenuBar::update(const sdl3::Input &input)
 void ui::MenuBar::render(sdl3::Renderer &renderer)
 {
     // Render the bar.
-    renderer.render_fill_rect(m_x, m_y, window::WIDTH, 20, ui::colors::MENU);
+    renderer.render_fill_rect(m_x, m_y, renderer.get_width(), 20, ui::colors::MENU);
 
     // Render the actual menus.
     for (auto &menu : m_menus) { menu->render(renderer); }

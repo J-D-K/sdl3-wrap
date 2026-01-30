@@ -7,7 +7,7 @@ namespace ui::menudims
     inline constexpr int PADDING = 24;
 
     /// @brief Margin used in between menus.
-    inline constexpr int MARGIN = 2;
+    inline constexpr int MARGIN = 1;
 
     /// @brief The height.
     inline constexpr int HEIGHT = 20;

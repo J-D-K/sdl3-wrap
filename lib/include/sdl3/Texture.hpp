@@ -8,8 +8,8 @@
 
 namespace sdl3
 {
-    // Forward to prevent headaches.
-    class SDL3;
+    /// @brief This makes some stuff easier even if I don't like it.
+    class Renderer;
 
     /// @brief Forward to allow the following.
     class Texture;
@@ -118,6 +118,9 @@ namespace sdl3
             /// @brief Sets the current renderer for creating and rendering textures.
             /// @param renderer Renderer to set.
             static void set_renderer(const sdl3::Renderer &renderer);
+
+            /// @brief Allows for the renderer to set targets easier.
+            friend class Renderer;
 
         private:
             /// @brief Pointer to the underlying SDL_Texture.

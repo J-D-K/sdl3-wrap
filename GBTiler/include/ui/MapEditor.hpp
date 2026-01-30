@@ -4,7 +4,7 @@
 #include "sdl3.hpp"
 #include "ui/Element.hpp"
 
-#include <array>
+#include <vector>
 
 namespace ui
 {
@@ -24,14 +24,23 @@ namespace ui
             void render(sdl3::Renderer &renderer) override;
 
         private:
-            /// @brief This is the number of layers for the array.
-            static constexpr size_t MAP_LAYERS = 2;
+            /// @brief Index of the currently selected tile.
+            int m_index{};
+
+            /// @brief The layer currently being edited.
+            int m_layer{};
+
+            /// @brief Centered render coordinate of the map.
+            int m_mapX{};
+
+            /// @brief Centered render coordinate of the map.
+            int m_mapY{};
 
             /// @brief Shared tileset.
             map::SharedTileset m_tileset{};
 
-            /// @brief Array of map layers.
-            std::array<map::Layer, MAP_LAYERS> m_layers;
+            /// @brief Vector of layers.
+            std::vector<map::Layer> m_layers{};
 
             /// @brief Target the map is rendered to.
             sdl3::SharedTexture m_mapTarget{};

@@ -11,6 +11,7 @@ find_package(Freetype REQUIRED)
 set(SOURCE_FILES
     source/Font.cpp
     source/Input.cpp
+    source/Renderer.cpp
     source/Texture.cpp)
 
 add_library(${PROJECT_NAME})

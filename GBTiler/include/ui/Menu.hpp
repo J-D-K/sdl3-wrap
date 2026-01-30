@@ -95,8 +95,5 @@ namespace ui
 
             /// @brief Checks and updates the sub-option width.
             void update_sub_options() noexcept;
-
-            /// @brief Renders the sub options.
-            void render_sub_options(sdl3::Renderer &renderer) noexcept;
     };
 }
