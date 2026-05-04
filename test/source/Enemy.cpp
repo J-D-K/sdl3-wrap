@@ -75,7 +75,7 @@ void Enemy::update(Game &game, const sdl3::Input &input)
     if (m_x + m_width < 0) { m_isPurgable = true; }
 }
 
-void Enemy::render()
+void Enemy::render(Game &game, sdl3::Renderer &renderer)
 {
     // Color for rendering hit counts.
     static constexpr SDL_Color GREEN = {.r = 0x00, .g = 0xFF, .b = 0x00, .a = 0xFF};

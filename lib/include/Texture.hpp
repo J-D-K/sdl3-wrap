@@ -1,5 +1,7 @@
 #pragma once
 
+#include "CoreComponent.hpp"
+#include "Renderer.hpp"
 #include "Surface.hpp"
 
 #include <SDL3/SDL.h>
@@ -16,7 +18,8 @@ namespace sdl3
     /// @brief This makes things easier to type.
     using SharedTexture = std::shared_ptr<Texture>;
 
-    class Texture final
+    /// @brief SDL_Texture wrapper class.
+    class Texture final : public sdl3::CoreComponent
     {
         public:
             /// @brief This is a null texture for targeting the framebuffer.
@@ -28,22 +31,26 @@ namespace sdl3
             /// @brief Creates and loads a texture from the path passed.
             /// @param renderer Pointer to the renderer used by the texture.
             /// @param texturePath Path to the texture to load.
-            Texture(SDL_Renderer *renderer, std::string_view texturePath);
+            Texture(std::string_view texturePath);
 
             /// @brief Creates a texture from the surface passed.
             /// @param renderer Pointer to the renderer used by the texture.
             /// @param surface Surface to create the texture from.
-            Texture(SDL_Renderer *renderer, sdl3::Surface &surface);
+            Texture(sdl3::Surface &surface);
 
             /// @brief Creates a blank texture using the flags passed.
             /// @param renderer Pointer to the renderer used by the texture.
             /// @param width Width of the texture.
             /// @param height Height of the texture.
             /// @param accessFlags Access flags.
-            Texture(SDL_Renderer *renderer, int width, int height, SDL_TextureAccess accessFlags);
+            Texture(int width, int height, SDL_TextureAccess accessFlags);
 
             /// @brief Frees the texture once it's finished.
             ~Texture();
+
+            /// @brief Initializes the texture class for usage.
+            /// @param renderer Renderer to use.
+            static void initialize(sdl3::Renderer &renderer);
 
             /// @brief Returns the width of the sprite.
             int get_width() const noexcept;
@@ -114,9 +121,6 @@ namespace sdl3
                                        int sourceHeight);
 
         private:
-            /// @brief Pointer to the renderer.
-            SDL_Renderer *m_renderer{};
-
             /// @brief Pointer to the underlying SDL_Texture.
             SDL_Texture *m_texture{};
 
@@ -126,7 +130,7 @@ namespace sdl3
             /// @brief Height of the texture.
             float m_height{};
 
-            /// @brief Flag storing whether or not the texture is valid.
-            bool m_isValid{};
+            /// @brief Shared pointer to the renderer (to make things easier to work with).
+            static inline SDL_Renderer *sm_renderer{};
     };
 }

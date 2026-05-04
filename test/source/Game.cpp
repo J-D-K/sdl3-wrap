@@ -20,10 +20,15 @@ namespace
 
 Game::Game()
     : m_sdl3()
-    , m_input()
+    , m_window{WINDOW_TITLE, WINDOW_WIDTH, WINDOW_HEIGHT}
+    , m_renderer{m_window}
+    , m_input{}
 {
     // Path of the main font used.
     static constexpr std::string_view FONT_PATH = "./assets/MainFont.ttf";
+
+    // Init texture.
+    sdl3::Texture::initialize(m_renderer);
 
     // Load the font.
     m_font = sdl3::FontManager::load_resource(FONT_PATH, FONT_PATH, 14);
@@ -50,7 +55,7 @@ int Game::run() noexcept
         if (exit) { return 0; }
 
         // Game update and render.
-        Game::update(input);
+        Game::update();
         Game::render();
     }
 }
@@ -83,15 +88,17 @@ void Game::update() noexcept
 
 void Game::render() noexcept
 {
+    static constexpr SDL_Color CLEAR = {.r = 0x00, .g = 0x00, .b = 0x00, .a = 0x00};
+
     // Start the rendering process.
-    sdl3::SDL3::frame_begin();
+    m_renderer.frame_begin(CLEAR);
 
     // Loop and render objects.
-    for (auto &object : m_objects) { object->render(); }
+    for (auto &object : m_objects) { object->render(*this, m_renderer); }
 
     m_font->render_text(0, 0, {0xFF, 0xFF, 0xFF, 0xFF}, std::format("Score: {}\nObject Count: {}", m_score, m_objects.size()));
 
-    sdl3::SDL3::frame_end();
+    m_renderer.frame_end();
 }
 
 //                      ---- Private Functions ----

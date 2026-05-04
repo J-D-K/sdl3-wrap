@@ -23,7 +23,7 @@ Star::Star()
 
 void Star::update(Game &game, const sdl3::Input &input) { m_x -= m_depth; }
 
-void Star::render()
+void Star::render(Game &game, sdl3::Renderer &renderer)
 {
     // This is the size to use to render.
     const float renderDimensions = 3 + m_depth;
@@ -34,7 +34,6 @@ void Star::render()
                                   .w = renderDimensions,
                                   .h = renderDimensions};
 
-    SDL_SetRenderDrawColor(sdl3::SDL3::get_renderer(), 0xFF, 0xFF, 0xFF, 0xFF);
-    // Place holder for now.
-    SDL_RenderFillRect(sdl3::SDL3::get_renderer(), &renderRect);
+    SDL_SetRenderDrawColor(renderer, 0xFF, 0xFF, 0xFF, 0xFF);
+    SDL_RenderFillRect(renderer, &renderRect);
 }

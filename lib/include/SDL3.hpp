@@ -1,7 +1,9 @@
 #pragma once
 
+#include "CoreComponent.hpp"
 #include "Font.hpp"
 #include "Input.hpp"
+#include "Renderer.hpp"
 #include "ResourceManager.hpp"
 #include "Texture.hpp"
 #include "Window.hpp"
@@ -11,7 +13,7 @@
 
 namespace sdl3
 {
-    class SDL3 final
+    class SDL3 final : public sdl3::CoreComponent
     {
         public:
             // No copying or moving.
@@ -26,14 +28,7 @@ namespace sdl3
             /// @brief Destructor. Quits SDL.
             ~SDL3();
 
-            /// @brief Returns whether or not initializing SDL3 was successful.
-            bool is_initialized() const noexcept;
-
             /// @brief Wrapper around SDL_PumpEvents.
             void pump_events();
-
-        private:
-            /// @brief Stores whether or not initialization was successful.
-            bool m_isInitialized{};
     };
 }

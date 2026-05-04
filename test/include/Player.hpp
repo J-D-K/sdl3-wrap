@@ -11,7 +11,7 @@ class Player final : public Object
         void update(Game &game, const sdl3::Input &input) override;
 
         /// @brief Renders the player sprite to screen.
-        void render() override;
+        void render(Game &game, sdl3::Renderer &render) override;
 
     private:
         /// @brief Loads the player's texture.

@@ -43,7 +43,7 @@ namespace sdl3
             /// @param renderer Pointer to the renderer used by the font.
             /// @param fontPath Path of the font to load.
             /// @param pixelSize Size of the font in pixels.
-            Font(SDL_Renderer *renderer, std::string_view fontPath, int pixelSize);
+            Font(std::string_view fontPath, int pixelSize);
 
             /// @brief Frees the Freetype face.
             ~Font();
@@ -76,9 +76,6 @@ namespace sdl3
 
             /// @brief Size of the glyphs in pixels.
             int m_pixelSize{};
-
-            /// @brief Pointer to renderer used.
-            SDL_Renderer *m_renderer{};
 
             /// @brief Font face used.
             FT_Face m_fontFace{};

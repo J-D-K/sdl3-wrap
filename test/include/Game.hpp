@@ -45,6 +45,12 @@ class Game final
         /// @brief SDL3 Container instance.
         sdl3::SDL3 m_sdl3{};
 
+        /// @brief Window instance.
+        sdl3::Window m_window{};
+
+        /// @brief Renderer instance.
+        sdl3::Renderer m_renderer{};
+
         /// @brief Input instance.
         sdl3::Input m_input{};
 

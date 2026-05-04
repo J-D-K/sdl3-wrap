@@ -22,7 +22,7 @@ class Enemy final : public Object
         void update(Game &game, const sdl3::Input &input) override;
 
         /// @brief Enemy render routine.
-        void render() override;
+        void render(Game &game, sdl3::Renderer &renderer) override;
 
     private:
         /// @brief Number of shots required to destroy the plane.

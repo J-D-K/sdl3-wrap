@@ -16,7 +16,7 @@ sdl3::SDL3::SDL3()
 {
     if (!SDL_Init(SDL_INIT_FLAGS)) { return; }
 
-    m_isInitialized = true;
+    m_initialized = true;
 }
 
 sdl3::SDL3::~SDL3()
@@ -26,7 +26,5 @@ sdl3::SDL3::~SDL3()
 }
 
 //                      ---- Public Functions ----
-
-bool sdl3::SDL3::is_initialized() const noexcept { return m_isInitialized; }
 
 void sdl3::SDL3::pump_events() { SDL_PumpEvents(); }

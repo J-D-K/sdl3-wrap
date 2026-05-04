@@ -1,12 +1,20 @@
 #pragma once
+#include "CoreComponent.hpp"
+
 #include <SDL3/SDL.h>
 #include <string_view>
 
 namespace sdl3
 {
-    class Window final
+    class Window final : sdl3::CoreComponent
     {
         public:
+            // No copying or moving.
+            Window(const Window &)            = delete;
+            Window(Window &&)                 = delete;
+            Window &operator=(const Window &) = delete;
+            Window &operator=(Window &&)      = delete;
+
             /// @brief Default.
             Window() = default;
 
@@ -19,43 +27,23 @@ namespace sdl3
             /// @brief Destroys the window.
             ~Window();
 
-            /// @brief Returns whether or not the window was created successfully.
-            bool is_initialized() const noexcept;
-
             /// @brief Returns the width of the window.
             int get_width() const noexcept;
 
             /// @brief Returns the height of the window.
             int get_height() const noexcept;
 
-            /// @brief Returns the renderer of the window.
-            SDL_Renderer *get_renderer() const noexcept;
-
-            /// @brief Sets the logical width and height of the window renderer.
-            /// @param width Logical width.
-            /// @param height Logical height.
-            bool set_logical_render_dimensions(int width, int height);
+            /// @brief Operator to act like a direct pointer to the underlying SDL_Window.
+            operator SDL_Window *() const noexcept;
 
         private:
-            /// @brief Stores whether or not initialization was successful.
-            bool m_isInitialized{};
-
             /// @brief Stores the width of the window.
             int m_width{};
 
             /// @brief Stores the height of the window.
             int m_height{};
 
-            /// @brief Stores the logical width of the renderer.
-            int m_logicalWidth{};
-
-            /// @brief Stores the logical height of the renderer.
-            int m_logicalHeight{};
-
             /// @brief SDL Window.
             SDL_Window *m_window{};
-
-            /// @brief SDL Renderer.
-            SDL_Renderer *m_renderer{};
     };
 }

@@ -61,7 +61,7 @@ void Player::update(Game &game, const sdl3::Input &input)
     Player::check_for_collisions(game);
 }
 
-void Player::render() { m_sprite->render(m_x, m_y); }
+void Player::render(Game &game, sdl3::Renderer &renderer) { m_sprite->render(m_x, m_y); }
 
 //                      ---- Private Functions ----
 

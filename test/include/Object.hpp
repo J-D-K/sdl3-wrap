@@ -35,7 +35,7 @@ class Object
         virtual void update(Game &game, const sdl3::Input &input) {};
 
         /// @brief Virtual render.
-        virtual void render() {};
+        virtual void render(Game &game, sdl3::Renderer &renderer) {};
 
         /// @brief Return the X coordinate.
         int get_x() const noexcept { return m_x; }

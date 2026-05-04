@@ -11,9 +11,8 @@
 
 //                      ---- Construction ----
 
-sdl3::Font::Font(SDL_Renderer *renderer, std::string_view fontPath, int pixelSize)
-    : m_renderer{renderer}
-    , m_pixelSize{pixelSize}
+sdl3::Font::Font(std::string_view fontPath, int pixelSize)
+    : m_pixelSize{pixelSize}
 {
     // Attempt to get the file size of the font.
     const size_t fontSize = std::filesystem::file_size(fontPath);
@@ -239,5 +238,5 @@ sdl3::SharedTexture sdl3::Font::convert_glyph_to_texture(char charCode, const FT
     const std::string glyphName = std::format("{}-{}", charCode, m_pixelSize);
 
     // Return the texture. We're going to use a name here instead of a path.
-    return sdl3::TextureManager::load_resource(glyphName, m_renderer, surface);
+    return sdl3::TextureManager::load_resource(glyphName, surface);
 }
