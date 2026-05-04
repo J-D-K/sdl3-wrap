@@ -50,8 +50,7 @@ int Game::run() noexcept
         m_input.update();
 
         // Exit on escape.
-        const sdl3::Input::State escape = m_input.get_key_state(SDL_SCANCODE_ESCAPE);
-        const bool exit                 = escape == sdl3::Input::State::Pressed;
+        const bool exit = m_input.key_pressed(SDL_SCANCODE_ESCAPE);
         if (exit) { return 0; }
 
         // Game update and render.

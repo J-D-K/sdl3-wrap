@@ -16,25 +16,31 @@ namespace sdl3
             Input &operator=(const Input &) = delete;
             Input &operator=(Input &&)      = delete;
 
-            /// @brief Enum for comparing key states to make this more console-like.
-            enum class State : uint8_t
-            {
-                Idle,
-                Pressed,
-                Held,
-                Released
-            };
-
             /// @brief Initializes input. We use a custom input to make it more console like and easier to read states.
             Input() = default;
 
             /// @brief Updates the internal input data.
             void update() noexcept;
 
-            /// @brief Returns the state for the scancode passed.
-            /// @param scancode Key to get the state for.
-            /// @return Const reference to the scan code.
-            State get_key_state(SDL_Scancode scancode) const noexcept;
+            /// @brief Returns whether or not the key passed is currently idle (no activity at all.)
+            /// @param scancode Code to check.
+            /// @return True if idle, false if not.
+            bool key_idle(SDL_Scancode scancode) const noexcept;
+
+            /// @brief Returns if the key passed was pressed on the given frame.
+            /// @param scancode Code to check.
+            /// @return True if pressed, false if not.
+            bool key_pressed(SDL_Scancode scancode) const noexcept;
+
+            /// @brief Returns whether or not the key passed is being held.
+            /// @param scancode Scancode to check.
+            /// @return True if held, false if not.
+            bool key_held(SDL_Scancode scancode) const noexcept;
+
+            /// @brief Returns if the key passed was released.
+            /// @param scancode Scancode to check.
+            /// @return True if released. False if not.
+            bool key_released(SDL_Scancode scancode) const noexcept;
 
             /// @brief Returns the mouse button flags.
             SDL_MouseButtonFlags get_mouse_flags() const noexcept;
@@ -46,6 +52,15 @@ namespace sdl3
             float get_mouse_y() const noexcept;
 
         private:
+            /// @brief Enum for comparing key states to make this more console-like.
+            enum class State : uint8_t
+            {
+                Idle,
+                Pressed,
+                Held,
+                Released
+            };
+
             /// @brief Number of keys found in the initialization.
             int m_keyCount{};
 

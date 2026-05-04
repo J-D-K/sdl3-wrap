@@ -18,11 +18,14 @@ void sdl3::Input::update() noexcept
     for (int i = 0; i < SDL_SCANCODE_COUNT; i++) { Input::update_keystate(static_cast<SDL_Scancode>(i), keystates[i]); }
 }
 
-sdl3::Input::State sdl3::Input::get_key_state(SDL_Scancode scancode) const noexcept
-{
-    // Return the state.
-    return m_keyArray.at(scancode);
-}
+bool sdl3::Input::key_idle(SDL_Scancode scancode) const noexcept { return m_keyArray.at(scancode) == Input::State::Idle; }
+
+bool sdl3::Input::key_pressed(SDL_Scancode scancode) const noexcept { return m_keyArray.at(scancode) == Input::State::Pressed; }
+
+bool sdl3::Input::key_held(SDL_Scancode scancode) const noexcept { return m_keyArray.at(scancode) == Input::State::Held; }
+
+bool sdl3::Input::key_released(SDL_Scancode scancode) const noexcept
+{ return m_keyArray.at(scancode) == Input::State::Released; }
 
 SDL_MouseButtonFlags sdl3::Input::get_mouse_flags() const noexcept { return m_mouseFlags; }
 
