@@ -19,7 +19,7 @@ class Enemy final : public Object
         Enemy();
 
         /// @brief Enemy update routine.
-        void update(Game &game, const sdl3::Input &input) override;
+        void update(Game &game, const sdl3::Keyboard &keyboard) override;
 
         /// @brief Enemy render routine.
         void render(Game &game, sdl3::Renderer &renderer) override;

@@ -10,7 +10,8 @@ find_package(Freetype REQUIRED)
 
 set(SOURCE_FILES
     source/Font.cpp
-    source/Input.cpp
+    source/Keyboard.cpp
+    source/Mouse.cpp
     source/Renderer.cpp
     source/SDL3.cpp
     source/Texture.cpp

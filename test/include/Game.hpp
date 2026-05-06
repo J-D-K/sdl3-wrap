@@ -31,8 +31,7 @@ class Game final
         void create_add_object(Args &&...args)
         {
             // Asset the template type is derived from Object.
-            static_assert(std::derived_from<ObjectType, Object> == true,
-                          "Object type created is not derived from base Object!");
+            static_assert(std::derived_from<ObjectType, Object>, "Object type created is not derived from base Object!");
 
             // Create and push it.
             m_objects.push_back(std::make_unique<ObjectType>(std::forward<Args>(args)...));
@@ -51,8 +50,11 @@ class Game final
         /// @brief Renderer instance.
         sdl3::Renderer m_renderer{};
 
-        /// @brief Input instance.
-        sdl3::Input m_input{};
+        /// @brief Keyboard instance.
+        sdl3::Keyboard m_keyboard{};
+
+        /// @brief Mouse instance.
+        sdl3::Mouse m_mouse{};
 
         /// @brief Test font.
         sdl3::SharedFont m_font{};
@@ -68,7 +70,7 @@ class Game final
         void render() noexcept;
 
         /// @brief Purges all of the offscreen objects.
-        void purge_offscreen_objects();
+        void purge_uneeded_objects();
 
         /// @brief Sorts the object vector by depth for rendering.
         void sort_objects_by_depth();

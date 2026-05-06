@@ -9,7 +9,7 @@ class Star final : public Object
         Star();
 
         /// @brief Update routine. Moves the star.
-        void update(Game &game, const sdl3::Input &input) override;
+        void update(Game &game, const sdl3::Keyboard &keyboard) override;
 
         /// @brief Renders the star.
         void render(Game &game, sdl3::Renderer &renderer) override;

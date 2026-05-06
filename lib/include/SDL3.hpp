@@ -2,7 +2,8 @@
 
 #include "CoreComponent.hpp"
 #include "Font.hpp"
-#include "Input.hpp"
+#include "Keyboard.hpp"
+#include "Mouse.hpp"
 #include "Renderer.hpp"
 #include "ResourceManager.hpp"
 #include "Texture.hpp"

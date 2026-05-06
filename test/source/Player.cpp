@@ -22,7 +22,7 @@ Player::Player()
 
 //                      ---- Public Functions ----
 
-void Player::update(Game &game, const sdl3::Input &input)
+void Player::update(Game &game, const sdl3::Keyboard &keyboard)
 {
     // Offsets for spawning the bullet.
     static constexpr int BULLET_OFFSET_X = 42;
@@ -32,11 +32,11 @@ void Player::update(Game &game, const sdl3::Input &input)
     static constexpr int STATIC_MOVEMENT = 4;
 
     // Grab keystates.
-    const bool moveUp      = input.key_pressed(SDL_SCANCODE_UP) || input.key_held(SDL_SCANCODE_UP);
-    const bool moveDown    = input.key_pressed(SDL_SCANCODE_DOWN) || input.key_held(SDL_SCANCODE_DOWN);
-    const bool moveLeft    = input.key_pressed(SDL_SCANCODE_LEFT) || input.key_held(SDL_SCANCODE_LEFT);
-    const bool moveRight   = input.key_pressed(SDL_SCANCODE_RIGHT) || input.key_held(SDL_SCANCODE_RIGHT);
-    const bool spawnBullet = input.key_pressed(SDL_SCANCODE_SPACE);
+    const bool moveUp      = keyboard.pressed(SDL_SCANCODE_UP) || keyboard.held(SDL_SCANCODE_UP);
+    const bool moveDown    = keyboard.pressed(SDL_SCANCODE_DOWN) || keyboard.held(SDL_SCANCODE_DOWN);
+    const bool moveLeft    = keyboard.pressed(SDL_SCANCODE_LEFT) || keyboard.held(SDL_SCANCODE_LEFT);
+    const bool moveRight   = keyboard.pressed(SDL_SCANCODE_RIGHT) || keyboard.held(SDL_SCANCODE_RIGHT);
+    const bool spawnBullet = keyboard.pressed(SDL_SCANCODE_SPACE);
 
     if (moveUp) { m_y -= STATIC_MOVEMENT; }
     else if (moveDown) { m_y += STATIC_MOVEMENT; }

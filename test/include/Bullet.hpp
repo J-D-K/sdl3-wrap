@@ -10,10 +10,10 @@ class Bullet final : public Object
         Bullet(int x, int y);
 
         /// @brief Runs the bullet update routine.
-        void update(Game &game, const sdl3::Input &input) override;
+        void update(Game &game, const sdl3::Keyboard &keyboard) override;
 
         /// @brief Renders the pellet to screen.
-        void render();
+        void render(Game &game, sdl3::Renderer &renderer) override;
 
     private:
         /// @brief Loads the sprite if it hasn't been already.

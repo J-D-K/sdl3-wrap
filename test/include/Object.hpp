@@ -32,7 +32,7 @@ class Object
         virtual ~Object() {};
 
         /// @brief Virtual update.
-        virtual void update(Game &game, const sdl3::Input &input) {};
+        virtual void update(Game &game, const sdl3::Keyboard &keyboard) {};
 
         /// @brief Virtual render.
         virtual void render(Game &game, sdl3::Renderer &renderer) {};

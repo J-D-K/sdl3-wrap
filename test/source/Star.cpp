@@ -21,7 +21,7 @@ Star::Star()
 
 //                      ---- Public Functions ----
 
-void Star::update(Game &game, const sdl3::Input &input) { m_x -= m_depth; }
+void Star::update(Game &game, const sdl3::Keyboard &keyboard) { m_x -= m_depth; }
 
 void Star::render(Game &game, sdl3::Renderer &renderer)
 {

@@ -26,7 +26,7 @@ Bullet::Bullet(int x, int y)
 
 //                      ---- Public Functions ----
 
-void Bullet::update(Game &game, const sdl3::Input &input)
+void Bullet::update(Game &game, const sdl3::Keyboard &keyboard)
 {
     // Increase the x.
     m_x += BULLET_SPEED;
@@ -35,7 +35,7 @@ void Bullet::update(Game &game, const sdl3::Input &input)
     if (m_x > LOGICAL_WIDTH) { Object::mark_for_purge(); }
 }
 
-void Bullet::render() { m_sprite->render(m_x, m_y); }
+void Bullet::render(Game &game, sdl3::Renderer &renderer) { m_sprite->render(m_x, m_y); }
 
 //                      ---- Private Functions ----
 
