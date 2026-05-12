@@ -33,6 +33,14 @@ bool sdl3::Renderer::set_logical_presentation(int width, int height)
     return SDL_SetRenderLogicalPresentation(m_renderer, width, height, SDL_LOGICAL_PRESENTATION_INTEGER_SCALE);
 }
 
+bool sdl3::Renderer::set_render_target(sdl3::SharedTexture &target) { return SDL_SetRenderTarget(m_renderer, *target); }
+
+bool sdl3::Renderer::set_render_clip(int x, int y, int width, int height)
+{
+    const SDL_Rect renderClip = {.x = x, .y = y, .w = width, .h = height};
+    return SDL_SetRenderClipRect(m_renderer, &renderClip);
+}
+
 bool sdl3::Renderer::frame_begin(SDL_Color clear)
 {
     const bool target = SDL_SetRenderTarget(m_renderer, nullptr);

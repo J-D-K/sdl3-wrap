@@ -1,5 +1,7 @@
 #include "Texture.hpp"
 
+#include "Renderer.hpp"
+
 #include <SDL3_image/SDL_image.h>
 
 //                      ---- Construction ----
@@ -27,6 +29,18 @@ sdl3::Texture::Texture(sdl3::Surface &surface)
     if (!sm_renderer) { return; }
 
     m_texture = SDL_CreateTextureFromSurface(sm_renderer, surface.get());
+    if (!m_texture) { return; }
+
+    m_initialized = true;
+}
+
+sdl3::Texture::Texture(std::span<const uint8_t> data)
+{
+    if (!sm_renderer) { return; }
+
+    // SDL IO.
+    SDL_IOStream *io = SDL_IOFromConstMem(data.data(), data.size());
+    m_texture        = IMG_LoadTexture_IO(sm_renderer, io, true);
     if (!m_texture) { return; }
 
     m_initialized = true;
@@ -129,5 +143,7 @@ bool sdl3::Texture::render_part_stretched(int x,
 
     return SDL_RenderTexture(sm_renderer, m_texture, &sourceRect, &destRect);
 }
+
+sdl3::Texture::operator SDL_Texture *() const noexcept { return m_texture; }
 
 //                      ---- Private Functions ----

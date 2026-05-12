@@ -1,5 +1,6 @@
 #pragma once
 #include "CoreComponent.hpp"
+#include "Texture.hpp"
 #include "Window.hpp"
 
 #include <SDL3/SDL.h>
@@ -34,6 +35,17 @@ namespace sdl3
 
             /// @brief Sets the logical width and height of the renderer.
             bool set_logical_presentation(int width, int height);
+
+            /// @brief Sets the render target of the renderer.
+            /// @param target Shared texture to target when rendering.
+            bool set_render_target(sdl3::SharedTexture &target);
+
+            /// @brief Sets the renderer rendering clip region.
+            /// @param x X coordinate.
+            /// @param y Y coordinate.
+            /// @param width Width of the area.
+            /// @param height Height of the area.
+            bool set_render_clip(int x, int y, int width, int height);
 
             /// @brief Sets the target to the default framebuffer and clears it to the color passed.
             /// @param clear Color to clear the framebuffer to.

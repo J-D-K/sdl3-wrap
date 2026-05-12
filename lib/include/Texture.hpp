@@ -1,16 +1,17 @@
 #pragma once
 
 #include "CoreComponent.hpp"
-#include "Renderer.hpp"
 #include "Surface.hpp"
 
 #include <SDL3/SDL.h>
+#include <cstdint>
 #include <filesystem>
+#include <span>
 
 namespace sdl3
 {
-    // Forward to prevent headaches.
-    class SDL3;
+    /// @brief Forward for less headaches.
+    class Renderer;
 
     /// @brief Forward to allow the following.
     class Texture;
@@ -37,6 +38,10 @@ namespace sdl3
             /// @param renderer Pointer to the renderer used by the texture.
             /// @param surface Surface to create the texture from.
             Texture(sdl3::Surface &surface);
+
+            /// @brief Creates a new texture using image data passed.
+            /// @param data Data to use to create the texture.
+            Texture(std::span<const uint8_t> data);
 
             /// @brief Creates a blank texture using the flags passed.
             /// @param renderer Pointer to the renderer used by the texture.
@@ -119,6 +124,9 @@ namespace sdl3
                                        int sourceY,
                                        int sourceWidth,
                                        int sourceHeight);
+
+            /// @brief Operator that allows passing as a plain, SDL_Texture.
+            operator SDL_Texture *() const noexcept;
 
         private:
             /// @brief Pointer to the underlying SDL_Texture.

@@ -9,8 +9,7 @@ find_package(SDL3 REQUIRED CONFIG REQUIRED COMPONENTS SDL3-shared)
 find_package(Freetype REQUIRED)
 
 set(SOURCE_FILES
-    source/main.cpp
-    source/WindowTest.cpp)
+    source/main.cpp)
 
 add_executable(${PROJECT_NAME})
 
