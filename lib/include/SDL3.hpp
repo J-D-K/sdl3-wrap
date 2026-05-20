@@ -2,7 +2,7 @@
 
 #include "CoreComponent.hpp"
 #include "Font.hpp"
-#include "GamepadScanner.hpp"
+#include "GamepadManager.hpp"
 #include "Keyboard.hpp"
 #include "Mouse.hpp"
 #include "Renderer.hpp"

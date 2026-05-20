@@ -10,7 +10,8 @@ find_package(Freetype REQUIRED)
 
 set(SOURCE_FILES
     source/Font.cpp
-    source/GamepadScanner.cpp
+    source/Gamepad.cpp
+    source/GamepadManager.cpp
     source/Keyboard.cpp
     source/Mouse.cpp
     source/Renderer.cpp
