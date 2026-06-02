@@ -14,12 +14,14 @@ sdl3::Gamepad::Gamepad(SDL_JoystickID joystick)
 sdl3::Gamepad::Gamepad(Gamepad &&gamepad)
     : m_id{gamepad.m_id}
     , m_pad{gamepad.m_pad}
+    , m_name{gamepad.m_name}
 {
     m_initialized = gamepad.m_initialized;
 
     gamepad.m_id          = 0;
     gamepad.m_pad         = nullptr;
     gamepad.m_initialized = false;
+    gamepad.m_name        = nullptr;
 }
 
 sdl3::Gamepad::~Gamepad()
@@ -30,7 +32,7 @@ sdl3::Gamepad::~Gamepad()
 
 //                          ---- Public Functions ----
 
-const char *sdl3::Gamepad::get_name() const noexcept { return m_name; }
+const char *sdl3::Gamepad::get_name() const noexcept { return SDL_GetGamepadName(m_pad); }
 
 SDL_JoystickID sdl3::Gamepad::get_id() const noexcept { return m_id; }
 
@@ -41,10 +43,14 @@ sdl3::Gamepad &sdl3::Gamepad::operator=(Gamepad &&gamepad)
     m_initialized = gamepad.m_initialized;
     m_id          = gamepad.m_id;
     m_pad         = gamepad.m_pad;
+    m_name        = gamepad.m_name;
 
     gamepad.m_initialized = false;
     gamepad.m_id          = 0;
     gamepad.m_pad         = nullptr;
+    gamepad.m_name        = nullptr;
+
+    return *this;
 }
 
 //                          ---- Private Functions ----

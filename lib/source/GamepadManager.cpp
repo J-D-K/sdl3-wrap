@@ -64,8 +64,9 @@ void sdl3::GamepadManager::connect_update_pads(std::span<const SDL_JoystickID> i
     for (const SDL_JoystickID id : ids)
     {
         // Check if it's already initialized.
-        const auto findPad = find_by_id(id);
-        if (findPad != m_pads.end()) { continue; }
+        const bool findPad    = find_by_id(id) != m_pads.end();
+        const bool notGamepad = !findPad && !SDL_IsGamepad(id);
+        if (findPad || notGamepad) { continue; }
 
         // Emplace/Init.
         m_pads.emplace_back(id);
@@ -80,27 +81,21 @@ void sdl3::GamepadManager::disconnect_pads(std::span<const SDL_JoystickID> ids)
     // Ensure state.
     m_disconnect = false;
 
-    // This is needed or else this whole thing doesn't work very well.
-    if (ids.empty() && !m_pads.empty())
+    // Lambda.
+    auto erase_gamepad = [ids](const sdl3::Gamepad &pad)
     {
-        m_pads.clear();
-        m_disconnect = true;
-        return;
-    }
+        // Loop. Return false if the ID is found.
+        for (const SDL_JoystickID id : ids)
+        {
+            if (id == pad.get_id()) { return false; }
+        }
 
-    // Loop through passed span.
-    for (const SDL_JoystickID id : ids)
-    {
-        // Check if it's found. If it is, just continue. It's good.
-        const auto findID = find_by_id(id);
-        if (findID != m_pads.end()) { continue; }
+        // Return to erase the pad.
+        return true;
+    };
 
-        // If it's not, it's been unplugged and needs to be purged.
-        m_pads.erase(findID);
-
-        // Register the disconnect.
-        m_disconnect = true;
-    }
+    // Erase pads as needed.
+    m_disconnect = std::erase_if(m_pads, erase_gamepad) > 0;
 }
 
 sdl3::GamepadManager::ConstPadIter sdl3::GamepadManager::find_by_id(SDL_JoystickID id) const noexcept

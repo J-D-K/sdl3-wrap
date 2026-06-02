@@ -41,7 +41,7 @@ namespace sdl3
             /// @brief Internally wrapped SDL_Gamepad.
             SDL_Gamepad *m_pad{};
 
-            /// @brief Name of the pad.
+            /// @brief Stores the pointer to the gamepad name.
             const char *m_name{};
 
             /// @brief Scans and stores the features the gamepad has.

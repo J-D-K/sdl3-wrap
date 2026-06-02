@@ -88,8 +88,8 @@ namespace sdl3
             void disconnect_pads(std::span<const SDL_JoystickID> ids);
 
             /// @brief Used multiple places. Returns a const iterator to the pad with the ID passed.
-            /// @param id
-            /// @return
+            /// @param id ID to search for.
+            /// @return Iterator to the Gamepad if found.
             ConstPadIter find_by_id(SDL_JoystickID id) const noexcept;
     };
 }
