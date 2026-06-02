@@ -5,6 +5,7 @@
 #include "screen.hpp"
 
 #include <cmath>
+#include <iostream>
 //                      ---- Construction ----
 
 Player::Player()
@@ -22,7 +23,7 @@ Player::Player()
 
 //                      ---- Public Functions ----
 
-void Player::update(Game &game, const sdl3::Keyboard &keyboard)
+void Player::update(Game &game, const Input &input)
 {
     // Offsets for spawning the bullet.
     static constexpr int BULLET_OFFSET_X = 42;
@@ -31,12 +32,30 @@ void Player::update(Game &game, const sdl3::Keyboard &keyboard)
     // This is for up and down.
     static constexpr int STATIC_MOVEMENT = 4;
 
+    // Keyboard and pad references.
+    const sdl3::Keyboard &keyboard = input.keyboard;
+
     // Grab keystates.
-    const bool moveUp      = keyboard.pressed(SDL_SCANCODE_UP) || keyboard.held(SDL_SCANCODE_UP);
-    const bool moveDown    = keyboard.pressed(SDL_SCANCODE_DOWN) || keyboard.held(SDL_SCANCODE_DOWN);
-    const bool moveLeft    = keyboard.pressed(SDL_SCANCODE_LEFT) || keyboard.held(SDL_SCANCODE_LEFT);
-    const bool moveRight   = keyboard.pressed(SDL_SCANCODE_RIGHT) || keyboard.held(SDL_SCANCODE_RIGHT);
-    const bool spawnBullet = keyboard.pressed(SDL_SCANCODE_SPACE);
+    bool moveUp      = keyboard.pressed(SDL_SCANCODE_UP) || keyboard.held(SDL_SCANCODE_UP);
+    bool moveDown    = keyboard.pressed(SDL_SCANCODE_DOWN) || keyboard.held(SDL_SCANCODE_DOWN);
+    bool moveLeft    = keyboard.pressed(SDL_SCANCODE_LEFT) || keyboard.held(SDL_SCANCODE_LEFT);
+    bool moveRight   = keyboard.pressed(SDL_SCANCODE_RIGHT) || keyboard.held(SDL_SCANCODE_RIGHT);
+    bool spawnBullet = keyboard.pressed(SDL_SCANCODE_SPACE);
+
+    // Only try pad if it's found!.
+    const auto padReference = input.gamepads.get_pad_by_index(0);
+    if (padReference.has_value())
+    {
+        // Get this so my hand gets a break.
+        const sdl3::Gamepad &pad = padReference->get();
+
+        // Modify values set previously.
+        moveUp |= pad.button_pressed(SDL_GAMEPAD_BUTTON_DPAD_UP) || pad.button_held(SDL_GAMEPAD_BUTTON_DPAD_UP);
+        moveDown |= pad.button_pressed(SDL_GAMEPAD_BUTTON_DPAD_DOWN) || pad.button_held(SDL_GAMEPAD_BUTTON_DPAD_DOWN);
+        moveLeft |= pad.button_pressed(SDL_GAMEPAD_BUTTON_DPAD_LEFT) || pad.button_held(SDL_GAMEPAD_BUTTON_DPAD_LEFT);
+        moveRight |= pad.button_pressed(SDL_GAMEPAD_BUTTON_DPAD_RIGHT) || pad.button_held(SDL_GAMEPAD_BUTTON_DPAD_RIGHT);
+        spawnBullet |= pad.button_pressed(SDL_GAMEPAD_BUTTON_SOUTH);
+    }
 
     if (moveUp) { m_y -= STATIC_MOVEMENT; }
     else if (moveDown) { m_y += STATIC_MOVEMENT; }

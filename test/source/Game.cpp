@@ -49,11 +49,12 @@ int Game::run() noexcept
         m_sdl3.pump_events();
 
         // Update input.
-        m_keyboard.update();
-        m_mouse.update();
+        m_input.keyboard.update();
+        m_input.mouse.update();
+        m_input.gamepads.update();
 
         // Exit on escape.
-        const bool exit = m_keyboard.pressed(SDL_SCANCODE_ESCAPE);
+        const bool exit = m_input.keyboard.pressed(SDL_SCANCODE_ESCAPE);
         if (exit) { return 0; }
 
         // Game update and render.
@@ -85,7 +86,7 @@ void Game::update() noexcept
     Game::sort_objects_by_depth();
 
     // Loop and update objects.
-    for (auto &object : m_objects) { object->update(*this, m_keyboard); }
+    for (auto &object : m_objects) { object->update(*this, m_input); }
 }
 
 void Game::render() noexcept
@@ -99,13 +100,14 @@ void Game::render() noexcept
     // Loop and render objects.
     for (auto &object : m_objects) { object->render(*this, m_renderer); }
 
+    const sdl3::Mouse &mouse      = m_input.mouse;
     const std::string debugString = std::format("Score: {}\nObject Count: {}\nMouse X, Y: {}, {}\nGlobal mouse X, Y: {}, {}",
                                                 m_score,
                                                 m_objects.size(),
-                                                m_mouse.x(),
-                                                m_mouse.y(),
-                                                m_mouse.global_x(),
-                                                m_mouse.global_y());
+                                                mouse.x(),
+                                                mouse.y(),
+                                                mouse.global_x(),
+                                                mouse.global_y());
     m_font->render_text(0, 0, DEB_TEXT, debugString);
 
     m_renderer.frame_end();
@@ -115,20 +117,8 @@ void Game::render() noexcept
 
 void Game::purge_uneeded_objects()
 {
-    for (auto iter = m_objects.begin(); iter != m_objects.end();)
-    {
-        // This is easier to type and read.
-        const Object &object = *iter->get();
-
-        if (object.is_purgable())
-        {
-            iter = m_objects.erase(iter);
-            continue;
-        }
-
-        // Increment iterator.
-        ++iter;
-    }
+    auto purge_object = [](const UniqueObject &object) { return object->is_purgable(); };
+    std::erase_if(m_objects, purge_object);
 }
 
 void Game::sort_objects_by_depth()

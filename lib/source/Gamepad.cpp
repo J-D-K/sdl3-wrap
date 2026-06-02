@@ -32,11 +32,23 @@ sdl3::Gamepad::~Gamepad()
 
 //                          ---- Public Functions ----
 
-const char *sdl3::Gamepad::get_name() const noexcept { return SDL_GetGamepadName(m_pad); }
+const char *sdl3::Gamepad::get_name() const noexcept { return m_name; }
 
 SDL_JoystickID sdl3::Gamepad::get_id() const noexcept { return m_id; }
 
-void sdl3::Gamepad::update() {}
+bool sdl3::Gamepad::button_idle(SDL_GamepadButton button) const noexcept
+{ return m_buttons[button] == sdl3::ButtonState::Idle; }
+
+bool sdl3::Gamepad::button_pressed(SDL_GamepadButton button) const noexcept
+{ return m_buttons[button] == sdl3::ButtonState::Pressed; }
+
+bool sdl3::Gamepad::button_held(SDL_GamepadButton button) const noexcept
+{ return m_buttons[button] == sdl3::ButtonState::Held; }
+
+bool sdl3::Gamepad::button_released(SDL_GamepadButton button) const noexcept
+{ return m_buttons[button] == sdl3::ButtonState::Released; }
+
+void sdl3::Gamepad::update() { update_buttons(); }
 
 sdl3::Gamepad &sdl3::Gamepad::operator=(Gamepad &&gamepad)
 {
@@ -54,3 +66,26 @@ sdl3::Gamepad &sdl3::Gamepad::operator=(Gamepad &&gamepad)
 }
 
 //                          ---- Private Functions ----
+
+void sdl3::Gamepad::update_buttons()
+{
+    for (int i = 0; i < SDL_GAMEPAD_BUTTON_COUNT; i++)
+    {
+        // Get whether or not the button is down.
+        sdl3::ButtonState &button = m_buttons[i];
+        const bool buttonDown     = SDL_GetGamepadButton(m_pad, static_cast<SDL_GamepadButton>(i));
+
+        // Update the state.
+        const bool pressed  = buttonDown && button == sdl3::ButtonState::Idle;
+        const bool held     = buttonDown && (button == sdl3::ButtonState::Pressed || button == sdl3::ButtonState::Held);
+        const bool released = !buttonDown && (button == sdl3::ButtonState::Pressed || button == sdl3::ButtonState::Held);
+
+        if (pressed) { button = sdl3::ButtonState::Pressed; }
+        else if (held) { button = sdl3::ButtonState::Held; }
+        else if (released) { button = sdl3::ButtonState::Released; }
+        else
+        {
+            button = sdl3::ButtonState::Idle;
+        }
+    }
+}

@@ -41,6 +41,8 @@ void sdl3::GamepadManager::update()
 
     // Start with disconnects.
     disconnect_pads(padSpan);
+
+    for (sdl3::Gamepad &pad : m_pads) { pad.update(); }
 }
 
 sdl3::GamepadManager::PadIter sdl3::GamepadManager::begin() { return m_pads.begin(); }

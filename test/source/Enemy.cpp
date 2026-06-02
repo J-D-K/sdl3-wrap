@@ -63,7 +63,7 @@ Enemy::Enemy()
 
 //                      ---- Public Functions ----
 
-void Enemy::update(Game &game, const sdl3::Keyboard &keyboard)
+void Enemy::update(Game &game, const Input &input)
 {
     // Move to the left and the speed from earlier.
     m_x -= m_speed;

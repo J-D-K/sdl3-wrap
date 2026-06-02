@@ -26,7 +26,7 @@ Bullet::Bullet(int x, int y)
 
 //                      ---- Public Functions ----
 
-void Bullet::update(Game &game, const sdl3::Keyboard &keyboard)
+void Bullet::update(Game &game, const Input &input)
 {
     // Increase the x.
     m_x += BULLET_SPEED;

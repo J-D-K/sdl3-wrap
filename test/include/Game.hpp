@@ -1,5 +1,6 @@
 #pragma once
 
+#include "Input.hpp"
 #include "Object.hpp"
 #include "SDL3.hpp"
 
@@ -50,11 +51,8 @@ class Game final
         /// @brief Renderer instance.
         sdl3::Renderer m_renderer{};
 
-        /// @brief Keyboard instance.
-        sdl3::Keyboard m_keyboard{};
-
-        /// @brief Mouse instance.
-        sdl3::Mouse m_mouse{};
+        /// @brief Input container struct.
+        Input m_input{};
 
         /// @brief Test font.
         sdl3::SharedFont m_font{};

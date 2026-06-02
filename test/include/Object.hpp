@@ -1,4 +1,5 @@
 #pragma once
+#include "Input.hpp"
 #include "SDL3.hpp"
 
 #include <memory>
@@ -32,7 +33,7 @@ class Object
         virtual ~Object() {};
 
         /// @brief Virtual update.
-        virtual void update(Game &game, const sdl3::Keyboard &keyboard) {};
+        virtual void update(Game &game, const Input &input) {};
 
         /// @brief Virtual render.
         virtual void render(Game &game, sdl3::Renderer &renderer) {};

@@ -8,7 +8,7 @@ class Player final : public Object
         Player();
 
         /// @brief Runs the update/control routine.
-        void update(Game &game, const sdl3::Keyboard &keyboard) override;
+        void update(Game &game, const Input &input) override;
 
         /// @brief Renders the player sprite to screen.
         void render(Game &game, sdl3::Renderer &render) override;
