@@ -7,7 +7,7 @@
 namespace sdl3
 {
     /// @brief Keyboard input wrapper class.
-    class Keyboard final
+    class Keyboard
     {
         public:
             // No copying or moving.

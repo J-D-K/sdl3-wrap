@@ -7,7 +7,7 @@
 namespace sdl3
 {
     /// @brief Mouse input wrapper.
-    class Mouse final
+    class Mouse
     {
         public:
             // No copying or moving.

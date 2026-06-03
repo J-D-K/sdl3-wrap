@@ -20,7 +20,7 @@ namespace sdl3
     using SharedTexture = std::shared_ptr<Texture>;
 
     /// @brief SDL_Texture wrapper class.
-    class Texture final : public sdl3::CoreComponent
+    class Texture : public sdl3::CoreComponent
     {
         public:
             /// @brief This is a null texture for targeting the framebuffer.

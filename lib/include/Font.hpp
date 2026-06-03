@@ -22,7 +22,7 @@ namespace sdl3
     using SharedFont = std::shared_ptr<sdl3::Font>;
 
     /// @brief This is a wrapper class around SDL3 and Freetype. It's not the most efficient, but it works.
-    class Font final
+    class Font
     {
         public:
             // clang-format off

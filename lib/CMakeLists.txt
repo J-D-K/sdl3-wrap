@@ -16,6 +16,7 @@ set(SOURCE_FILES
     source/Mouse.cpp
     source/Renderer.cpp
     source/SDL3.cpp
+    source/Timer.cpp
     source/Texture.cpp
     source/Window.cpp)
 

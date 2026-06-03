@@ -8,7 +8,7 @@
 namespace sdl3
 {
     /// @brief Gamepad wrapper class.
-    class Gamepad final : public sdl3::CoreComponent
+    class Gamepad : public sdl3::CoreComponent
     {
         public:
             // No copying.

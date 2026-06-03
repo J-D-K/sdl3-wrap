@@ -10,7 +10,7 @@
 namespace sdl3
 {
     /// @brief Gamepad manager class.
-    class GamepadManager final
+    class GamepadManager
     {
         public:
             // These make things easier to read and type.
@@ -53,10 +53,10 @@ namespace sdl3
             void update();
 
             /// @brief Begin.
-            PadIter begin();
+            PadIter begin() noexcept;
 
             /// @brief End.
-            PadIter end();
+            PadIter end() noexcept;
 
             /// @brief Const begin.
             ConstPadIter begin() const noexcept;

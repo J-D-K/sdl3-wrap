@@ -8,6 +8,7 @@
 #include "Renderer.hpp"
 #include "ResourceManager.hpp"
 #include "Texture.hpp"
+#include "Timer.hpp"
 #include "Window.hpp"
 
 #include <SDL3/SDL.h>
@@ -15,7 +16,7 @@
 
 namespace sdl3
 {
-    class SDL3 final : public sdl3::CoreComponent
+    class SDL3 : public sdl3::CoreComponent
     {
         public:
             // No copying or moving.

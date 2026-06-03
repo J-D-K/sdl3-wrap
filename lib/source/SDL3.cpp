@@ -4,18 +4,17 @@
 
 #include <cmath>
 
-namespace
-{
-    /// @brief The flags used for initializing SDL.
-    constexpr SDL_InitFlags SDL_INIT_FLAGS = SDL_INIT_AUDIO | SDL_INIT_VIDEO | SDL_INIT_EVENTS | SDL_INIT_GAMEPAD;
-}
-
 //                      ---- Construction ----
 
 sdl3::SDL3::SDL3()
 {
-    if (!SDL_Init(SDL_INIT_FLAGS)) { return; }
+    // Flags to init with.
+    static constexpr SDL_InitFlags INIT_FLAGS = SDL_INIT_AUDIO | SDL_INIT_VIDEO | SDL_INIT_EVENTS | SDL_INIT_GAMEPAD;
 
+    // Return if init fails.
+    if (!SDL_Init(INIT_FLAGS)) { return; }
+
+    // We're good?
     m_initialized = true;
 }
 

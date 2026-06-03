@@ -14,6 +14,15 @@ class Player final : public Object
         void render(Game &game, sdl3::Renderer &render) override;
 
     private:
+        /// @brief Number of ticks before the player's collision kicks in.
+        static constexpr uint64_t INVINCIBILITY_TICKS = 3000;
+
+        /// @brief Timer for allowing collision.
+        sdl3::Timer m_invinciTimer{INVINCIBILITY_TICKS};
+
+        /// @brief Whether or not the player is solid yet.
+        bool m_isSolid{};
+
         /// @brief Loads the player's texture.
         void load_player_texture();
 

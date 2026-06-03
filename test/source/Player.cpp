@@ -32,6 +32,9 @@ void Player::update(Game &game, const Input &input)
     // This is for up and down.
     static constexpr int STATIC_MOVEMENT = 4;
 
+    // Make the player solid if needed.
+    if (!m_isSolid && m_invinciTimer.triggered()) { m_isSolid = true; }
+
     // Keyboard and pad references.
     const sdl3::Keyboard &keyboard = input.keyboard;
 
@@ -90,6 +93,9 @@ void Player::check_for_collisions(Game &game) noexcept
 {
     // Point hit.
     static constexpr int POINT_DEDUCTION = -500;
+
+    // Don't continue unless the player is solid.
+    if (!m_isSolid) { return; }
 
     // Span.
     std::span<const UniqueObject> objects = game.get_game_objects();

@@ -8,7 +8,7 @@
 namespace sdl3
 {
     /// @brief SDL3 renderer wrapper class.
-    class Renderer final : public sdl3::CoreComponent
+    class Renderer : public sdl3::CoreComponent
     {
         public:
             // No copies or moving.

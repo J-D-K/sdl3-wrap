@@ -45,9 +45,9 @@ void sdl3::GamepadManager::update()
     for (sdl3::Gamepad &pad : m_pads) { pad.update(); }
 }
 
-sdl3::GamepadManager::PadIter sdl3::GamepadManager::begin() { return m_pads.begin(); }
+sdl3::GamepadManager::PadIter sdl3::GamepadManager::begin() noexcept { return m_pads.begin(); }
 
-sdl3::GamepadManager::PadIter sdl3::GamepadManager::end() { return m_pads.end(); }
+sdl3::GamepadManager::PadIter sdl3::GamepadManager::end() noexcept { return m_pads.end(); }
 
 sdl3::GamepadManager::ConstPadIter sdl3::GamepadManager::begin() const noexcept { return m_pads.begin(); }
 
